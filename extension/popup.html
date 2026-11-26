@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Qeva</title>
+    <style>
+      body {
+        font: 13px/1.4 system-ui, sans-serif;
+        margin: 0;
+        padding: 14px;
+        width: 340px;
+        color: #0f172a;
+        background: #f8fafc;
+      }
+      h1 {
+        font-size: 15px;
+        margin: 0 0 4px;
+        letter-spacing: -0.02em;
+      }
+      .muted {
+        margin: 0 0 12px;
+        color: #64748b;
+        font-size: 12px;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin: 8px 0 4px;
+        font-size: 12px;
+      }
+      input[type='text'],
+      input[type='password'],
+      input[type='url'] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 10px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #fff;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .row label {
+        margin: 0;
+        font-weight: 500;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      button {
+        flex: 1;
+        padding: 9px 12px;
+        border: 0;
+        border-radius: 8px;
+        background: #1d4ed8;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button.secondary {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+      .status {
+        margin-top: 10px;
+        font-size: 12px;
+      }
+      .ok {
+        color: #166534;
+      }
+      .bad {
+        color: #991b1b;
+      }
+      hr {
+        border: 0;
+        border-top: 1px solid #e2e8f0;
+        margin: 14px 0;
+      }
+      #matches {
+        max-height: 200px;
+        overflow: auto;
+      }
+      .match {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 0;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .match:last-child {
+        border-bottom: 0;
+      }
+      .match .meta {
+        flex: 1;
+        min-width: 0;
+      }
+      .match .title {
+        font-weight: 600;
+        truncate: true;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .match .user {
+        color: #64748b;
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .match button {
+        flex: 0 0 auto;
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+      .locked {
+        color: #b45309;
+        font-size: 11px;
+      }
+      .section-title {
+        font-weight: 600;
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>qeva<span style="color: #10b981">.</span></h1>
+    <p class="muted">Access token from Settings → Access Tokens. Autofill on login pages; submit can offer to save.</p>
+
+    <label for="apiBase">API base URL</label>
+    <input id="apiBase" type="url" placeholder="http://127.0.0.1:3100" />
+    <label for="token">Access token</label>
+    <input id="token" type="password" placeholder="qeva_..." autocomplete="off" />
+
+    <div class="row">
+      <label for="autofill">Autofill when one match</label>
+      <input id="autofill" type="checkbox" checked />
+    </div>
+    <div class="row">
+      <label for="savePrompt">Ask before saving</label>
+      <input id="savePrompt" type="checkbox" checked />
+    </div>
+
+    <div class="actions">
+      <button id="save" type="button">Save</button>
+      <button id="test" type="button" class="secondary">Test</button>
+    </div>
+    <div id="status" class="status"></div>
+
+    <hr />
+    <div class="section-title">This tab</div>
+    <div id="matches" class="muted">Open a login page, then reload this popup.</div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

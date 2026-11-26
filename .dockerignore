@@ -1,0 +1,13 @@
+# Qeva Docker Ignore
+node_modules
+.next
+.git
+.env
+.env.local
+.env.bak
+logs/*.log
+certs/*.pem
+*.md
+!README.md
+docs/
+.vscode/

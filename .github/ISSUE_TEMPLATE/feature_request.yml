@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest an improvement for Community Qeva
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Company / SSO / SCIM / SIEM features belong in **Enterprise**, not this repo. See [docs/open-core.md](../../docs/open-core.md).
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do that is hard today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: How should Community behave?
+    validations:
+      required: true
+  - type: checkboxes
+    id: edition
+    attributes:
+      label: Edition check
+      options:
+        - label: This request is appropriate for Community (individual vault), not Enterprise-only org features
+          required: true
