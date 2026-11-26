@@ -71,6 +71,21 @@ const docs = fs.readFileSync(path.join(root, 'docs/self-hosting.md'), 'utf8');
 assert(docs.includes('QEVA_BOOTSTRAP_PASSWORD'), 'docs mention one-shot password');
 assert(docs.includes('--profile bundled'), 'docs bundled profile');
 assert(docs.includes('Supabase') || docs.includes('DATABASE_URL'), 'docs external Postgres');
+assert(docs.includes('QEVA_SETUP_OTP'), 'docs mention console setup OTP');
+assert(!docs.includes('ALLOW_DEV_OTP'), 'docs do not advertise ALLOW_DEV_OTP');
+
+const otpLib = fs.readFileSync(path.join(root, 'src/lib/otp.ts'), 'utf8');
+assert(otpLib.includes('QEVA_SETUP_OTP'), 'otp logs QEVA_SETUP_OTP without SMTP');
+assert(otpLib.includes('smtpConfigured'), 'otp checks SMTP');
+assert(!otpLib.includes('getDevOtp'), 'otp does not use getDevOtp');
+assert(!otpLib.includes('process.env.DEV_OTP'), 'otp does not read DEV_OTP env');
+assert(!fs.existsSync(path.join(root, 'src/lib/dev-otp.ts')), 'dev-otp.ts removed');
+assert(schema.includes('accountReady'), 'User.accountReady for console unlock vs email verify');
+assert(!envExample.includes('ALLOW_DEV_OTP') && !/\bDEV_OTP=/.test(envExample), '.env.example has no DEV_OTP');
+
+const verifyRoute = fs.readFileSync(path.join(root, 'src/app/api/auth/verify/route.ts'), 'utf8');
+assert(verifyRoute.includes('otpProvesEmail'), 'verify only marks email when OTP was emailed');
+assert(verifyRoute.includes('accountReady'), 'verify sets accountReady');
 
 if (failed) {
   console.error(`selfcheck-selfhost: ${failed} failure(s)`);

@@ -20,7 +20,7 @@ export function PageHeader({
   title: string;
   description?: string;
   actions?: ReactNode;
-  /** Ignored — kept so existing call sites compile. */
+  /** Ignored - kept so existing call sites compile. */
   eyebrow?: string;
 }) {
   return (

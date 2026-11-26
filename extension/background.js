@@ -17,7 +17,7 @@ async function getConfig() {
 
 async function api(path, options = {}) {
   const { apiBase, accessToken } = await getConfig();
-  if (!accessToken) throw new Error('Not signed in — set an access token in the popup');
+  if (!accessToken) throw new Error('Not signed in - set an access token in the popup');
 
   // Ensure we can reach the API host (optional permissions for non-localhost)
   try {

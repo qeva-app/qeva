@@ -1,5 +1,5 @@
 /**
- * Qeva demo seed — realistic org + individual vaults for product demos.
+ * Qeva demo seed - realistic org + individual vaults for product demos.
  *
  * Run:  npm run seed:demo
  * Force refresh of demo passwords:  node scripts/seed-demo.js --refresh
@@ -8,16 +8,16 @@
  *
  * Demo story
  * ──────────
- * Acme Corp (ACTIVE) — primary walkthrough org
- *   Sarah Chen   admin@acmecorp.com   ADMIN   — full vault, onboarding complete
- *   James Wilson manager@acmecorp.com MANAGER — Security team owner
- *   Priya Sharma  dev@acmecorp.com    USER    — Engineering
- *   Mike Rodriguez ops@acmecorp.com   USER    — DevOps
- *   Ava Nguyen    newhire@acmecorp.com USER   — incomplete onboarding (banner demo)
+ * Acme Corp (ACTIVE) - primary walkthrough org
+ *   Sarah Chen   admin@acmecorp.com   ADMIN - full vault, onboarding complete
+ *   James Wilson manager@acmecorp.com MANAGER - Security team owner
+ *   Priya Sharma  dev@acmecorp.com    USER - Engineering
+ *   Mike Rodriguez ops@acmecorp.com   USER - DevOps
+ *   Ava Nguyen    newhire@acmecorp.com USER - incomplete onboarding (banner demo)
  *
- * NovaTech Labs (TRIAL) — secondary org with light data
+ * NovaTech Labs (TRIAL) - secondary org with light data
  *
- * Individuals — personal vault only
+ * Individuals - personal vault only
  *   john@gmail.com / alex@outlook.com
  */
 
@@ -133,7 +133,7 @@ function daysAgo(days) {
 
 function encrypt(plaintext) {
   const key = process.env.ENCRYPTION_KEY;
-  if (!key) throw new Error('ENCRYPTION_KEY not set — add it to .env');
+  if (!key) throw new Error('ENCRYPTION_KEY not set - add it to .env');
   const keyBuf = crypto.createHash('sha256').update(key).digest();
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv('aes-256-gcm', keyBuf, iv);
@@ -193,6 +193,7 @@ async function upsertUser({
         lastName,
         name: `${firstName} ${lastName}`,
         isVerified: true,
+        accountReady: true,
         isActive: true,
         accountType,
         organizationId: organizationId || null,
@@ -231,6 +232,7 @@ async function upsertUser({
       lastName,
       name: `${firstName} ${lastName}`,
       isVerified: true,
+      accountReady: true,
       isActive: true,
       accountType,
       organizationId: organizationId || null,
@@ -423,7 +425,7 @@ async function seedDemo() {
     where: { name: 'Acme Corp' },
     update: {
       domain: 'acmecorp.com',
-      description: 'Enterprise SaaS — primary Qeva demo organization',
+      description: 'Enterprise SaaS - primary Qeva demo organization',
       status: 'ACTIVE',
       contactEmail: 'admin@acmecorp.com',
       trialStartDate: daysAgo(45),
@@ -435,7 +437,7 @@ async function seedDemo() {
     create: {
       name: 'Acme Corp',
       domain: 'acmecorp.com',
-      description: 'Enterprise SaaS — primary Qeva demo organization',
+      description: 'Enterprise SaaS - primary Qeva demo organization',
       status: 'ACTIVE',
       contactEmail: 'admin@acmecorp.com',
       trialStartDate: daysAgo(45),
@@ -451,7 +453,7 @@ async function seedDemo() {
     where: { name: 'NovaTech Labs' },
     update: {
       domain: 'novatech.io',
-      description: 'AI startup on trial — secondary demo org',
+      description: 'AI startup on trial - secondary demo org',
       status: 'TRIAL',
       contactEmail: 'founder@novatech.io',
       trialStartDate: daysAgo(3),
@@ -462,7 +464,7 @@ async function seedDemo() {
     create: {
       name: 'NovaTech Labs',
       domain: 'novatech.io',
-      description: 'AI startup on trial — secondary demo org',
+      description: 'AI startup on trial - secondary demo org',
       status: 'TRIAL',
       contactEmail: 'founder@novatech.io',
       trialStartDate: daysAgo(3),
@@ -549,7 +551,7 @@ async function seedDemo() {
     department: 'Engineering',
     position: 'Software Engineer',
   });
-  console.log('  ✓ newhire@acmecorp.com (USER — onboarding pending)');
+  console.log('  ✓ newhire@acmecorp.com (USER - onboarding pending)');
 
   const founder = await upsertUser({
     email: 'founder@novatech.io',
@@ -595,7 +597,7 @@ async function seedDemo() {
 
   const engineering = await ensureTeam(acme.id, sarah.id, {
     name: 'Engineering',
-    description: 'Product engineering — shared staging & CI secrets',
+    description: 'Product engineering - shared staging & CI secrets',
     color: '#2563EB',
     icon: 'Code',
   });
@@ -617,7 +619,7 @@ async function seedDemo() {
   await ensureMembership(engineering.id, priya.id, 'MEMBER');
   await ensureMembership(engineering.id, mike.id, 'MEMBER');
   await ensureMembership(engineering.id, james.id, 'VIEWER');
-  // Ava intentionally not on a team yet — onboarding step stays open
+  // Ava intentionally not on a team yet - onboarding step stays open
 
   await ensureMembership(devops.id, mike.id, 'OWNER');
   await ensureMembership(devops.id, priya.id, 'MEMBER');
@@ -650,7 +652,7 @@ async function seedDemo() {
   const REUSED = 'Welcome2024!';
 
   const passwordDefs = [
-    // Sarah — personal (strong, favorites, age variety)
+    // Sarah - personal (strong, favorites, age variety)
     {
       title: 'AWS Console (Prod)',
       username: 'sarah.chen@acmecorp.com',
@@ -662,7 +664,7 @@ async function seedDemo() {
       color: '#FF9900',
       isFavorite: true,
       tags: 'aws,prod,infra',
-      notes: 'Root-adjacent IAM user — rotate after contractor offboarding.',
+      notes: 'Root-adjacent IAM user - rotate after contractor offboarding.',
       lastUsed: daysAgo(1),
       createdAt: daysAgo(60),
       expiryDate: daysFromNow(55),
@@ -764,7 +766,7 @@ async function seedDemo() {
       userId: sarah.id,
       color: '#9CA3AF',
       tags: 'qa,reuse-demo',
-      notes: 'Same secret as Staging Portal — triggers reused finding.',
+      notes: 'Same secret as Staging Portal - triggers reused finding.',
       createdAt: daysAgo(88),
       expiryDate: daysFromNow(30),
     },
@@ -779,7 +781,7 @@ async function seedDemo() {
       userId: sarah.id,
       color: '#9CA3AF',
       tags: 'wifi,weak',
-      notes: 'Should be rotated — kept for health demo.',
+      notes: 'Should be rotated - kept for health demo.',
       createdAt: daysAgo(300),
       expiryDate: daysAgo(100),
     },
@@ -1115,7 +1117,7 @@ async function seedDemo() {
       icon: 'Cloud',
       category: 'Cloud',
       website: 'https://aws.amazon.com',
-      // SigV4 needs a dedicated connector — not in v1 HTTP probes
+      // SigV4 needs a dedicated connector - not in v1 HTTP probes
       probeType: null,
       probeUrl: null,
       probeAuth: null,
@@ -1288,13 +1290,13 @@ async function seedDemo() {
   console.log('═'.repeat(56));
   console.log('\n  Password for all accounts: Demo@1234\n');
   console.log('  Primary demo (Acme Corp)');
-  console.log('    admin@acmecorp.com      ADMIN    — full org, onboarding done');
-  console.log('    manager@acmecorp.com    MANAGER  — Security team');
-  console.log('    dev@acmecorp.com        USER     — Engineering');
-  console.log('    ops@acmecorp.com        USER     — DevOps');
-  console.log('    newhire@acmecorp.com    USER     — onboarding still open');
+  console.log('    admin@acmecorp.com      ADMIN - full org, onboarding done');
+  console.log('    manager@acmecorp.com    MANAGER - Security team');
+  console.log('    dev@acmecorp.com        USER - Engineering');
+  console.log('    ops@acmecorp.com        USER - DevOps');
+  console.log('    newhire@acmecorp.com    USER - onboarding still open');
   console.log('\n  Secondary org');
-  console.log('    founder@novatech.io     ADMIN    — NovaTech TRIAL');
+  console.log('    founder@novatech.io     ADMIN - NovaTech TRIAL');
   console.log('\n  Individuals');
   console.log('    john@gmail.com / alex@outlook.com');
   console.log('\n  Demo tips');

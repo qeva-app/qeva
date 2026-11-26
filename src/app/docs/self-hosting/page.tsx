@@ -23,7 +23,7 @@ export default function SelfHostingDocsPage() {
         description={
           <>
             Run Qeva Community on your own infrastructure. Vault data stays in your PostgreSQL volume
-            (or external Postgres/Supabase). <EditionBadge edition="community" /> is individuals only —
+            (or external Postgres/Supabase). <EditionBadge edition="community" /> is individuals only  - 
             no company signup, teams, or SSO.
           </>
         }
@@ -85,7 +85,7 @@ curl -s http://localhost:3100/api/health`}
             <li>
               Set <InlineCode>QEVA_DATABASE_URL</InlineCode> in <InlineCode>.env</InlineCode> (
               <InlineCode>postgresql://</InlineCode> or <InlineCode>postgres://</InlineCode>). Do not put a
-              localhost <InlineCode>DATABASE_URL</InlineCode> in the shell — Compose will pick it up and break
+              localhost <InlineCode>DATABASE_URL</InlineCode> in the shell - Compose will pick it up and break
               the container.
             </li>
             <li>
@@ -161,12 +161,12 @@ docker compose --profile bundled up -d --build`}
               [
                 <>503 on <InlineCode>/api/health</InlineCode></>,
                 <>
-                  <InlineCode>docker compose logs postgres</InlineCode> — still starting / bad{' '}
+                  <InlineCode>docker compose logs postgres</InlineCode> - still starting / bad{' '}
                   <InlineCode>DB_PASSWORD</InlineCode>
                 </>,
               ],
               ['Redirect loop', <>Clear <InlineCode>FORCE_HTTPS</InlineCode> or fix proxy X-Forwarded-Proto</>],
-              ['Build fails on Prisma', 'Image targets linux-musl-openssl-3.0.x — rebuild without cache'],
+              ['Build fails on Prisma', 'Image targets linux-musl-openssl-3.0.x - rebuild without cache'],
               [
                 'No admin password in logs',
                 <>
@@ -182,7 +182,7 @@ docker compose --profile bundled up -d --build`}
             <a href="https://qeva.in" target="_blank" rel="noreferrer">
               qeva.in
             </a>{' '}
-            — it does not provision a tenant yet.
+ - it does not provision a tenant yet.
           </p>
         </DocSection>
       </div>

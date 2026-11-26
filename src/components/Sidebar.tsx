@@ -292,7 +292,7 @@ export default function Sidebar() {
                           <Tooltip>
                             <TooltipTrigger asChild>{navLink}</TooltipTrigger>
                             <TooltipContent side="right">
-                              {locked ? `${item.label} — ${LOCK_HINT}` : item.label}
+                              {locked ? `${item.label} - ${LOCK_HINT}` : item.label}
                             </TooltipContent>
                           </Tooltip>
                         ) : locked ? (

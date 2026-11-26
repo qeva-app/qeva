@@ -6,6 +6,7 @@ import * as LucideIcons from 'lucide-react';
 import PasswordStrengthIndicator from './PasswordStrengthIndicator';
 import IconPicker from './IconPicker';
 import { toast } from 'sonner';
+import { useEncryption } from '@/contexts/EncryptionContext';
 import { calculatePasswordStrength } from '@/lib/password-strength';
 import {
   decryptWithClientDek,
@@ -38,6 +39,7 @@ export default function EditPasswordModal({
   onSuccess,
   rotateOnOpen = false,
 }: EditPasswordModalProps) {
+  const { state: encState } = useEncryption();
   const [form, setForm] = useState({
     title: '',
     username: '',
@@ -68,6 +70,8 @@ export default function EditPasswordModal({
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [canEdit, setCanEdit] = useState(true);
   const [access, setAccess] = useState<FeatureAccess | null>(null);
+  const [useMasterKey, setUseMasterKey] = useState(false);
+  const [wasMasterKey, setWasMasterKey] = useState(false);
   const canAccessGlobalVault = !!access?.canAccessGlobalVault;
 
   useEffect(() => {
@@ -120,7 +124,7 @@ export default function EditPasswordModal({
           next.setDate(next.getDate() + rotationDays);
           expiry = next.toISOString().slice(0, 10);
           setShowPassword(true);
-          toast.message('New password generated — review and save to rotate');
+          toast.message('New password generated - review and save to rotate');
         }
         (async () => {
           let current = '';
@@ -162,6 +166,9 @@ export default function EditPasswordModal({
             isTeam: !!pw.isTeam,
             serviceId: pw.serviceId || '',
           });
+          const master = pw.encryptionType === 'USER_MASTER';
+          setWasMasterKey(master);
+          setUseMasterKey(!!encState.isEnabled && master);
           setCurrentPassword(current);
           setStrength(
             newPassword ? calculatePasswordStrength(newPassword).score : pw.strength || 0
@@ -244,7 +251,18 @@ export default function EditPasswordModal({
       if (!form.isTeam) body.isGlobal = form.isGlobal && canAccessGlobalVault;
 
       const secret = form.password || currentPassword;
-      if (!form.isTeam && !form.isGlobal && isClientVaultUnlocked() && secret) {
+      const wantMaster =
+        !form.isTeam &&
+        !form.isGlobal &&
+        useMasterKey &&
+        encState.isEnabled &&
+        !!secret;
+      if (wantMaster) {
+        if (!isClientVaultUnlocked()) {
+          toast.error('Unlock your vault to use master-password encryption');
+          setLoading(false);
+          return;
+        }
         body.clientEncrypted = true;
         body.encryptionType = 'USER_MASTER';
         body.encryptedPassword = await encryptWithClientDek(secret);
@@ -255,6 +273,9 @@ export default function EditPasswordModal({
       } else {
         body.notes = form.notes;
         if (form.password) body.password = form.password;
+        // Leaving master-key: send plaintext so server can re-wrap as PUBLIC_KEY
+        else if (wasMasterKey && secret) body.password = secret;
+        if (wasMasterKey) body.clientEncrypted = false;
       }
 
       const res = await fetch(`/api/passwords/${passwordId}`, {
@@ -460,6 +481,29 @@ export default function EditPasswordModal({
                   className="rounded border-border"
                 />
                 Share with organization (Global)
+              </label>
+            )}
+
+            {!form.isTeam && !form.isGlobal && (
+              <label
+                className={`flex items-start gap-2 text-sm ${encState.isEnabled && canEdit ? 'cursor-pointer' : 'cursor-default opacity-70'}`}
+              >
+                <input
+                  type="checkbox"
+                  className="mt-0.5 rounded border-border"
+                  checked={encState.isEnabled && useMasterKey}
+                  disabled={!encState.isEnabled || !canEdit}
+                  readOnly={!encState.isEnabled}
+                  onChange={(e) => setUseMasterKey(e.target.checked)}
+                />
+                <span>
+                  Encrypt with master password (zero-knowledge)
+                  {!encState.isEnabled && (
+                    <span className="block text-xs text-muted-foreground">
+                      Enable encryption in Settings to use this.
+                    </span>
+                  )}
+                </span>
               </label>
             )}
 

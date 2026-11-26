@@ -2,7 +2,7 @@ export type DocsNavChild = {
   title: string;
   href: string;
   keywords?: string[];
-  /** Enterprise-only capability — still listed so Community readers know what EE unlocks. */
+  /** Enterprise-only capability - still listed so Community readers know what EE unlocks. */
   edition?: 'enterprise';
 };
 export type DocsNavItem = {

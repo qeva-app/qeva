@@ -250,7 +250,7 @@ export default function PasswordGenerator() {
               {policy.requireLower ? ', lower' : ''}
               {policy.requireNumber ? ', number' : ''}
               {policy.requireSymbol ? ', symbol' : ''}
-              — rotate every {policy.rotationDays} days
+ - rotate every {policy.rotationDays} days
             </p>
           </div>
         </PageBlock>

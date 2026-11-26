@@ -89,7 +89,7 @@ export default function DashboardEnhanced() {
     },
     {
       label: 'Avg Strength',
-      value: stats?.avgStrength != null ? `${stats.avgStrength}` : '—',
+      value: stats?.avgStrength != null ? `${stats.avgStrength}` : '-',
       trend: 'Score / 100',
     },
     {
@@ -120,7 +120,7 @@ export default function DashboardEnhanced() {
     <PageShell>
       <PageHeader
         title={`Welcome back, ${firstName}`}
-        description="Vault posture and recent credentials — open the vault to manage secrets."
+        description="Vault posture and recent credentials - open the vault to manage secrets."
         actions={
           <>
             <Button asChild size="sm">

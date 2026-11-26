@@ -81,7 +81,7 @@ function ActivateContent() {
         setError(data.error || 'Activation failed');
         return;
       }
-      toast.success('Account activated — sign in with your new password');
+      toast.success('Account activated - sign in with your new password');
       router.push('/auth/signin');
     } catch {
       setError('An error occurred');

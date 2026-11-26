@@ -421,7 +421,7 @@ export default function TeamManagement() {
 
                 return (
                   <div key={pw.id} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-md hover:border-primary/20 transition-all duration-200">
-                    {/* Card Header — clickable to expand/collapse */}
+                    {/* Card Header - clickable to expand/collapse */}
                     <div
                       className="px-5 py-4 flex items-center gap-3 cursor-pointer select-none hover:bg-muted/30 transition-colors"
                       onClick={() => toggleCard(pw.id)}

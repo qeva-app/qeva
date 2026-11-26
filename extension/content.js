@@ -11,7 +11,7 @@ function isVisibleInput(el) {
   );
 }
 
-/** True login signals — avoid random app text fields (role name, search, etc.). */
+/** True login signals - avoid random app text fields (role name, search, etc.). */
 function isLoginUsernameInput(el) {
   if (!isVisibleInput(el) || el.type === 'password') return false;
   if (el.type === 'email') return true;
@@ -29,7 +29,7 @@ function findLoginFields(root = document) {
   const username =
     [...root.querySelectorAll('input')].find(isLoginUsernameInput) || null;
 
-  // Need a password field, or an email/username step (SPA) — never bare text alone
+  // Need a password field, or an email/username step (SPA) - never bare text alone
   if (!password && !username) return null;
 
   const form =
@@ -106,7 +106,7 @@ function fillCredential(fields, cred) {
     } catch {
       /* ignore */
     }
-    showToast(`Qeva filled email — password will fill on the next step`);
+    showToast(`Qeva filled email - password will fill on the next step`);
     return;
   }
 
@@ -159,7 +159,7 @@ function placeChip(anchorEl, onClick) {
     chip.type = 'button';
     chip.dataset.qevaChip = '1';
     chip.textContent = 'q.';
-    chip.title = 'Qeva — fill from vault';
+    chip.title = 'Qeva - fill from vault';
     chip.style.cssText =
       'pointer-events:auto;position:fixed;width:28px;height:28px;border:0;border-radius:8px;background:#1d4ed8;color:#fff;font:700 12px/28px ui-sans-serif,system-ui;cursor:pointer;box-shadow:0 4px 14px rgba(29,78,216,.45);padding:0;z-index:2147483647';
     chip.addEventListener('click', (e) => {
@@ -205,7 +205,7 @@ function showPicker(passwords, fields) {
     const empty = document.createElement('p');
     empty.style.cssText = 'margin:12px;color:#64748b';
     empty.textContent = locked.length
-      ? 'Vault locked for these credentials — unlock in the Qeva web app.'
+      ? 'Vault locked for these credentials - unlock in the Qeva web app.'
       : 'No matching logins. Add one in Qeva with website containing google.com or gmail.com.';
     panel.appendChild(empty);
   } else {
@@ -302,12 +302,12 @@ function showSavePrompt(payload) {
 async function openPickerForPage() {
   const fields = findLoginFields();
   if (!fields) {
-    showToast('No email/password field found yet — wait for the form to load');
+    showToast('No email/password field found yet - wait for the form to load');
     return;
   }
   const res = await send('QEVA_GET_LOGINS', { host: location.hostname });
   if (!res?.ok) {
-    showToast(res?.error || 'Could not reach Qeva — check the extension token');
+    showToast(res?.error || 'Could not reach Qeva - check the extension token');
     return;
   }
   showPicker(res.passwords || [], fields);
@@ -347,7 +347,7 @@ async function refreshUi(opts = {}) {
     /* filled from previous step */
   }
 
-  // SPA churn (Google): same field already wired — skip chip + network
+  // SPA churn (Google): same field already wired - skip chip + network
   if (
     opts.fromMutation &&
     fields.anchor === lastAnchor &&
@@ -382,7 +382,7 @@ function setup() {
   window.addEventListener('scroll', reposition, { passive: true });
   window.addEventListener('resize', reposition, { passive: true });
 
-  // Google / SPAs: email first, password appears later — debounce hard, no repeat fetches
+  // Google / SPAs: email first, password appears later - debounce hard, no repeat fetches
   const mo = new MutationObserver(() => {
     clearTimeout(mo._t);
     mo._t = setTimeout(() => refreshUi({ autofillOnce: true, fromMutation: true }), 500);

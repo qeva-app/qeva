@@ -55,7 +55,7 @@ export function withAuth(handler: ApiHandler, requiredPermission?: string): ApiH
         }
       }
 
-      // Attach user to a cloned request — NextRequest headers are immutable
+      // Attach user to a cloned request - NextRequest headers are immutable
       const headers = new Headers(req.headers);
       headers.set('x-user-id', session.user.id);
       headers.set('x-user-email', session.user.email || '');

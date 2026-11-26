@@ -76,15 +76,7 @@ export async function POST(req: NextRequest) {
     const rounds = parseInt(process.env.BCRYPT_ROUNDS || '12');
     const passwordHash = await bcrypt.hash(password, rounds);
 
-    let otpIssue: Awaited<ReturnType<typeof issueOtp>>;
-    try {
-      otpIssue = await issueOtp(email, 'verification');
-    } catch (e: any) {
-      return NextResponse.json(
-        { error: e.message || 'Email verification is not configured' },
-        { status: 503 }
-      );
-    }
+    const otpIssue = await issueOtp(email, 'verification');
     const { otpHash, expiresAt: otpExpiry, emailSent } = otpIssue;
 
     // Generate username from email
@@ -101,7 +93,7 @@ export async function POST(req: NextRequest) {
       });
 
       if (existingOrg) {
-        // Do not auto-join — require an invite from an org admin
+        // Do not auto-join - require an invite from an org admin
         return NextResponse.json(
           {
             error:
@@ -129,7 +121,7 @@ export async function POST(req: NextRequest) {
         email,
       });
     }
-    // Individual signups stay individual — matching a company domain does not auto-join.
+    // Individual signups stay individual - matching a company domain does not auto-join.
 
     // Create user
     const user = await prisma.user.create({
@@ -144,6 +136,7 @@ export async function POST(req: NextRequest) {
         otpExpiry,
         isActive: true,
         isVerified: false,
+        accountReady: false,
         mfaPromptPending: true,
         accountType: organizationId ? 'ORGANIZATION' : 'INDIVIDUAL',
         organizationId,
@@ -154,7 +147,7 @@ export async function POST(req: NextRequest) {
     if (signupType === 'company' && organizationId) {
       const orgUserCount = await prisma.user.count({ where: { organizationId } });
       if (orgUserCount <= 1) {
-        // First user — assign ADMIN role
+        // First user - assign ADMIN role
         const adminRole = await prisma.role.findFirst({ where: { name: 'ADMIN', isSystem: true } });
         if (adminRole) {
           await prisma.userRoleAssignment.create({
@@ -184,9 +177,11 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: signupType === 'company'
-          ? 'Registration successful. Your organization is pending approval. Please verify your email.'
-          : 'Registration successful. Please verify your email.',
+        message: emailSent
+          ? signupType === 'company'
+            ? 'Registration successful. Your organization is pending approval. Please verify your email.'
+            : 'Registration successful. Please verify your email.'
+          : 'Registration successful. Enter the setup code from the server logs (QEVA_SETUP_OTP).',
         email,
         signupType,
         emailSent,

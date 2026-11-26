@@ -79,6 +79,7 @@ export async function POST(req: NextRequest) {
     data: {
       password: passwordHash,
       isVerified: true,
+      accountReady: true,
       isActive: true,
       otp: null,
       otpExpiry: null,

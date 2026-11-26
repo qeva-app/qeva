@@ -20,7 +20,7 @@ export default function AdminUsersPage() {
         title="User management"
         description={
           <>
-            Manage users, roles, and access in your organization. <EditionBadge edition="enterprise" /> — company
+            Manage users, roles, and access in your organization. <EditionBadge edition="enterprise" /> - company
             accounts only.
           </>
         }
@@ -54,7 +54,7 @@ export default function AdminUsersPage() {
             ]}
           />
           <p className="mt-3 text-sm text-muted-foreground">
-            Permission counts come from <Link href="/docs/rbac">RBAC seeding</Link> — not live user totals.
+            Permission counts come from <Link href="/docs/rbac">RBAC seeding</Link> - not live user totals.
           </p>
         </DocSection>
 

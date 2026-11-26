@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Team name is required' }, { status: 400 });
   }
 
-  // Always bind team to the caller's org — never trust client-supplied organizationId
+  // Always bind team to the caller's org - never trust client-supplied organizationId
   const organizationId = await getActorOrganizationId(session.user.id);
   if (!organizationId) {
     return NextResponse.json(

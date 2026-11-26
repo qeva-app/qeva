@@ -2,7 +2,7 @@
  * Open-core edition gates (Community tree).
  * Run: node scripts/selfcheck-edition.js
  *
- * Community must NOT ship packages/qeva-enterprise — EE overlay is private.
+ * Community must NOT ship packages/qeva-enterprise - EE overlay is private.
  */
 const fs = require('fs');
 const path = require('path');

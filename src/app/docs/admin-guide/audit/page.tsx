@@ -33,7 +33,7 @@ export default function AdminAuditPage() {
             rows={[
               [<InlineCode key="a">action</InlineCode>, 'e.g. USER_LOGIN, PASSWORD_CREATED, SHARED_LINK_VIEWED'],
               [<InlineCode key="b">resource</InlineCode>, 'Category of target (password, auth, shared_link, …)'],
-              [<InlineCode key="c">details</InlineCode>, 'JSON context (ids, titles, clientKind — never secrets)'],
+              [<InlineCode key="c">details</InlineCode>, 'JSON context (ids, titles, clientKind - never secrets)'],
               [<InlineCode key="d">userId</InlineCode>, 'Who performed the action (null for unknown failed logins)'],
               [<InlineCode key="e">ipAddress</InlineCode>, 'Request IP'],
               [<InlineCode key="f">userAgent</InlineCode>, 'Client user-agent when available'],

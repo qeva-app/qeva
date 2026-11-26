@@ -53,7 +53,7 @@ async function createReport(req: NextRequest) {
     return NextResponse.json({ error: 'Organization required for this report' }, { status: 400 });
   }
 
-  // Backup jobs are platform-wide (no org FK) — only super admin may export them
+  // Backup jobs are platform-wide (no org FK) - only super admin may export them
   if (type === 'backup') {
     const session = await getServerSession(authOptions);
     if (!requireSuperAdmin(session)) {
@@ -73,7 +73,7 @@ async function createReport(req: NextRequest) {
 
   const report = await prisma.report.create({
     data: {
-      name: body.name || `${catalog.label} — ${new Date().toISOString().split('T')[0]}`,
+      name: body.name || `${catalog.label} - ${new Date().toISOString().split('T')[0]}`,
       type,
       format,
       period,

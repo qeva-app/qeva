@@ -33,10 +33,10 @@ function getEncryptionKey(): Buffer {
   if (isWeakEncryptionKey(key)) {
     if (process.env.NODE_ENV === 'production') {
       throw new Error(
-        'ENCRYPTION_KEY is too short (<32) or still a placeholder — set a strong random secret'
+        'ENCRYPTION_KEY is too short (<32) or still a placeholder - set a strong random secret'
       );
     }
-    console.warn('[crypto] ENCRYPTION_KEY looks weak/placeholder — OK in development only');
+    console.warn('[crypto] ENCRYPTION_KEY looks weak/placeholder - OK in development only');
   }
   return crypto.createHash('sha256').update(key).digest();
 }
@@ -70,7 +70,7 @@ export function decryptNotes(
       return decrypt(notes, keyOverride);
     }
   } catch {
-    /* not JSON ciphertext — legacy plaintext */
+    /* not JSON ciphertext - legacy plaintext */
   }
   return notes;
 }
@@ -115,7 +115,7 @@ export function decrypt(encryptedStr: string, keyOverride?: Buffer): string {
 
 /**
  * Derive a 32-byte KEK from a master password using Argon2id.
- * Replaces PBKDF2 — memory-hard against GPU/ASIC guessing.
+ * Replaces PBKDF2 - memory-hard against GPU/ASIC guessing.
  */
 export async function deriveKey(password: string, salt: Buffer): Promise<Buffer> {
   const raw = await argon2.hash(password, {

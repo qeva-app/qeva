@@ -5,5 +5,5 @@ export function getTheme(): Theme {
 }
 
 export function setTheme(_theme: Theme): void {
-  // Light theme only — no-op
+  // Light theme only - no-op
 }

@@ -1,4 +1,4 @@
-// Client-safe permission checking — no DB access
+// Client-safe permission checking - no DB access
 
 import { ROLE_PERMISSIONS } from './permissions';
 

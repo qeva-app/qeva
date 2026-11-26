@@ -44,7 +44,7 @@ export default function RBACDocsPage() {
       />
 
       <Callout variant="info" title="Edition">
-        Community individuals still use vault ACL for tokens. Company roles/teams need Enterprise —{' '}
+        Community individuals still use vault ACL for tokens. Company roles/teams need Enterprise  - {' '}
         <Link href="/docs/open-core">compare editions</Link>.
       </Callout>
 

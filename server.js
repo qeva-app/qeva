@@ -1,4 +1,4 @@
-// server.js — Custom HTTPS server wrapper for Qeva
+// server.js - Custom HTTPS server wrapper for Qeva
 // Wraps Next.js with HTTPS using SSL certs from certs/ directory
 // Starts weekly email scheduler after Next.js is ready
 

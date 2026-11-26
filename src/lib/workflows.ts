@@ -94,7 +94,7 @@ export function isOrgAccount(user: {
   accountType?: string | null;
   organizationId?: string | null;
 }): boolean {
-  // Community Docker is individuals-only — treat everyone as personal vault.
+  // Community Docker is individuals-only - treat everyone as personal vault.
   if (!allowsCompanyAccounts()) return false;
   return user.accountType === 'ORGANIZATION' && !!user.organizationId;
 }

@@ -95,7 +95,7 @@ function loadMatches() {
         const meta = document.createElement('div');
         meta.className = 'meta';
         meta.innerHTML = `<div class="title">${escapeHtml(cred.title)}</div><div class="user">${escapeHtml(cred.username || '')}</div>${
-          cred.locked ? '<div class="locked">Locked — unlock vault in web app</div>' : ''
+          cred.locked ? '<div class="locked">Locked - unlock vault in web app</div>' : ''
         }`;
         row.appendChild(meta);
 
@@ -106,7 +106,7 @@ function loadMatches() {
           btn.addEventListener('click', () => {
             chrome.tabs.sendMessage(tab.id, { type: 'QEVA_FILL_CREDENTIAL', credential: cred }, (r) => {
               if (chrome.runtime.lastError || !r?.ok) {
-                // Content script may not be injected yet — inject fill via scripting
+                // Content script may not be injected yet - inject fill via scripting
                 chrome.scripting.executeScript({
                   target: { tabId: tab.id },
                   func: (c) => {

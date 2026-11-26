@@ -100,7 +100,7 @@ async function handlePost(req: NextRequest) {
   const name = typeof body.name === 'string' ? body.name.trim() : '';
   const roleId = typeof body.roleId === 'string' ? body.roleId : '';
 
-  /** Local-part only — domain is always the org's (ignore any typed @domain). */
+  /** Local-part only - domain is always the org's (ignore any typed @domain). */
   const toLocal = (raw: unknown) => {
     if (typeof raw !== 'string') return '';
     return raw
@@ -266,7 +266,7 @@ async function handlePost(req: NextRequest) {
       activateUrl,
     });
   } catch (e) {
-    logger.error('Invite email failed — rolling back user', { email, error: e });
+    logger.error('Invite email failed - rolling back user', { email, error: e });
     await prisma.user.delete({ where: { id: user.id } }).catch(() => {});
     return NextResponse.json(
       {

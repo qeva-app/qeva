@@ -179,7 +179,7 @@ export default function ServicesPage() {
         url: profile.url || p.url,
         headerName: profile.headerName || p.headerName,
       }));
-      toast.success('Profile loaded (data only — not executed)');
+      toast.success('Profile loaded (data only - not executed)');
     } catch {
       toast.error('Invalid JSON profile');
     }
@@ -343,13 +343,13 @@ export default function ServicesPage() {
         <div className="motion-overlay-in fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="motion-panel-in bg-card rounded-xl shadow-lg w-full max-w-md mx-4 p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Test — {testTarget.name}</h2>
+              <h2 className="text-lg font-semibold">Test - {testTarget.name}</h2>
               <button onClick={() => setTestTarget(null)}>
                 <X size={20} className="text-muted-foreground" />
               </button>
             </div>
             <p className="text-xs text-muted-foreground mb-4">
-              Uses allowlisted probes only. Upload a JSON connection profile if you want — never DLL/JAR drivers.
+              Uses allowlisted probes only. Upload a JSON connection profile if you want - never DLL/JAR drivers.
             </p>
             <div className="space-y-3">
               <div>

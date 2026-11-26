@@ -103,7 +103,7 @@ export default function AgentsDocsPage() {
           </ul>
           <Callout variant="info" title="Still web-only">
             Admin, SSO, backup, MFA setup, share links, and workflows stay in the app.{' '}
-            <InlineCode>USER_MASTER</InlineCode> secrets stay locked — same as the browser extension.
+            <InlineCode>USER_MASTER</InlineCode> secrets stay locked - same as the browser extension.
           </Callout>
         </DocSection>
 
@@ -249,7 +249,7 @@ curl -s -H "Authorization: Bearer $QEVA_TOKEN" \\
         </DocSection>
 
         <DocSection id="security" title="Security checklist">
-          <p>Toggle items as you harden the setup — progress stays in this browser.</p>
+          <p>Toggle items as you harden the setup - progress stays in this browser.</p>
           <InteractiveChecklist
             storageKey="qeva-docs-agent-security"
             items={[

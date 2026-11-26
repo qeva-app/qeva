@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 
 interface AnimatedCardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
-  /** Ignored — kept so existing call sites keep compiling. */
+  /** Ignored - kept so existing call sites keep compiling. */
   delay?: number;
   className?: string;
 }

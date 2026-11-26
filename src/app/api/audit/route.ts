@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { logAudit, AuditActions } from '@/lib/audit';
 
-/** Own audit trail — Community and Enterprise. Org-wide export stays on Reports (EE). */
+/** Own audit trail - Community and Enterprise. Org-wide export stays on Reports (EE). */
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {

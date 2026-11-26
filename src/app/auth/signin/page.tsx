@@ -42,8 +42,8 @@ function describeSignInError(code: string, email: string): SignInError {
   switch (code) {
     case 'EMAIL_NOT_VERIFIED':
       return {
-        message: 'Your email address has not been verified yet.',
-        action: { label: 'Verify email', href: `/auth/verify?email=${encodeURIComponent(email)}` },
+        message: 'Finish setup with the email or server-log code before signing in.',
+        action: { label: 'Enter code', href: `/auth/verify?email=${encodeURIComponent(email)}` },
       };
     case 'ACCOUNT_DEACTIVATED':
       return { message: 'This account has been deactivated. Contact your administrator.' };

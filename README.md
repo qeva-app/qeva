@@ -1,6 +1,6 @@
 # Qeva
 
-**Self-hosted password vault** for individuals. Keep credentials on your own Postgres — with MFA, a browser extension, access tokens, and an audit trail.
+**Self-hosted password vault** for individuals. Keep credentials on your own Postgres - with MFA, a browser extension, access tokens, and an audit trail.
 
 This repository is the **Community (open-core)** edition: personal vault only. Company accounts, teams, SSO, and org admin tools ship separately as Enterprise.
 
@@ -34,10 +34,10 @@ cp .env.example .env
 
 Edit `.env` and set at least:
 
-- `NEXTAUTH_SECRET` — `openssl rand -base64 32`
-- `ENCRYPTION_KEY` — another strong secret (≥32 chars)
-- `DB_PASSWORD` — Postgres password for the bundled DB
-- `SUPER_ADMIN_EMAIL` — first admin login email
+- `NEXTAUTH_SECRET` - `openssl rand -base64 32`
+- `ENCRYPTION_KEY` - another strong secret (≥32 chars)
+- `DB_PASSWORD` - Postgres password for the bundled DB
+- `SUPER_ADMIN_EMAIL` - first admin login email
 
 ```bash
 docker compose --profile bundled up -d --build
@@ -96,7 +96,7 @@ Checks: `npm run selfcheck`
 
 ## Enterprise
 
-Enterprise source is **private** (overlay + managed hosting) and is not part of this repository. Public Community images have no EE package — flipping an env var alone does not unlock Enterprise.
+Enterprise source is **private** (overlay + managed hosting) and is not part of this repository. Public Community images have no EE package - flipping an env var alone does not unlock Enterprise.
 
 ---
 

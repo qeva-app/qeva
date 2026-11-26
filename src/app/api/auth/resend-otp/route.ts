@@ -27,15 +27,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email is already verified' }, { status: 400 });
     }
 
-    let otpIssue: Awaited<ReturnType<typeof issueOtp>>;
-    try {
-      otpIssue = await issueOtp(email, 'verification');
-    } catch (e: any) {
-      return NextResponse.json(
-        { error: e.message || 'Email verification is not configured' },
-        { status: 503 }
-      );
-    }
+    // Console-unlocked users may re-request after SMTP is configured to prove email
+    const otpIssue = await issueOtp(email, 'verification');
 
     await prisma.user.update({
       where: { id: user.id },
@@ -45,7 +38,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       message: otpIssue.emailSent
         ? 'OTP resent successfully'
-        : 'OTP updated (email not configured)',
+        : 'Setup code written to server logs (QEVA_SETUP_OTP) - SMTP is not configured',
       emailSent: otpIssue.emailSent,
     });
   } catch (error) {

@@ -193,7 +193,7 @@ export default function SuperAdminPanel() {
                       <div>
                         <p className="font-medium text-foreground">{org.name}</p>
                         <p className="text-xs text-muted-foreground">
-                          {[org.domain, org.contactEmail].filter(Boolean).join(' · ') || '—'}
+                          {[org.domain, org.contactEmail].filter(Boolean).join(' · ') || '-'}
                         </p>
                       </div>
                     </div>
@@ -258,7 +258,7 @@ export default function SuperAdminPanel() {
           <span className="text-sm text-muted-foreground">{waitlist.length} entries</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          Lead capture only — not provisioned tenants.
+          Lead capture only - not provisioned tenants.
         </p>
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
@@ -274,7 +274,7 @@ export default function SuperAdminPanel() {
               {waitlist.map((w) => (
                 <tr key={w.id} className="border-b border-border">
                   <td className="px-4 py-3 text-foreground">{w.email}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{w.company || w.name || '—'}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{w.company || w.name || '-'}</td>
                   <td className="px-4 py-3 text-muted-foreground">{w.source}</td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {new Date(w.createdAt).toLocaleDateString()}

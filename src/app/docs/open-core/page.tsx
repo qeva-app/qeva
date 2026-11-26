@@ -77,7 +77,7 @@ export default function OpenCoreDocsPage() {
               [
                 <InlineCode key="e">Enterprise</InlineCode>,
                 'Private / managed',
-                'Company accounts and org integrations — not in this repository',
+                'Company accounts and org integrations - not in this repository',
               ],
             ]}
           />

@@ -1,4 +1,4 @@
-// Assert org role permission sanitizer — run: node scripts/selftest-rbac-catalog.js
+// Assert org role permission sanitizer - run: node scripts/selftest-rbac-catalog.js
 const assert = require('assert');
 
 // Inline mirror of sanitize rules (avoid TS path). Keep in sync with src/lib/rbac-catalog.ts

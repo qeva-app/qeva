@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-/** Legacy route — workflows live at /workflows */
+/** Legacy route - workflows live at /workflows */
 export default function OnboardingPage({
   searchParams,
 }: {

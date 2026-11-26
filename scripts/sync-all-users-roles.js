@@ -19,7 +19,7 @@ async function syncAllUsersRoles() {
       where: { name: roleName, isSystem: true },
     });
     if (!role) {
-      console.log(`  SKIP: ${user.email} — role "${roleName}" not found`);
+      console.log(`  SKIP: ${user.email} - role "${roleName}" not found`);
       continue;
     }
 
@@ -28,14 +28,14 @@ async function syncAllUsersRoles() {
     });
 
     if (existing) {
-      console.log(`  OK:   ${user.email} — already has ${roleName}`);
+      console.log(`  OK:   ${user.email} - already has ${roleName}`);
       continue;
     }
 
     await prisma.userRoleAssignment.create({
       data: { userId: user.id, roleId: role.id },
     });
-    console.log(`  SYNC: ${user.email} — assigned ${roleName}`);
+    console.log(`  SYNC: ${user.email} - assigned ${roleName}`);
   }
 
   console.log('\nRole sync complete!');

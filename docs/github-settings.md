@@ -2,7 +2,7 @@
 
 `gh` was not authenticated from this workspace when these were written. Apply manually (or after `gh auth login`).
 
-## Branch protection — `main`
+## Branch protection - `main`
 
 Recommended **strict** settings:
 

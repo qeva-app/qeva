@@ -51,7 +51,7 @@ export async function detectSessionAnomaly(
   });
 
   if (recentSessions.length === 0) {
-    // First login — no history to compare against
+    // First login - no history to compare against
     return { isAnomaly: false, reasons: [] };
   }
 

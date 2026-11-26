@@ -3,7 +3,7 @@ import crypto from 'crypto';
 type RsaKeyPair = { publicKey: string; privateKey: string };
 
 // Kept on globalThis so every route bundle shares one keypair and a hot reload in
-// development doesn't replace it — a new key would orphan the one browsers have cached.
+// development doesn't replace it - a new key would orphan the one browsers have cached.
 const globalForCrypto = globalThis as unknown as { __qevaRsaKeyPair?: RsaKeyPair };
 
 function getKeyPair(): RsaKeyPair {

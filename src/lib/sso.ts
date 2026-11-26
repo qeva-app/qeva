@@ -1,5 +1,5 @@
-﻿/**
- * Community stub — real SSO lives in qeva-enterprise overlay.
+/**
+ * Community stub - real SSO lives in qeva-enterprise overlay.
  */
 export type SSOProviderType = 'SAML' | 'LDAP' | 'OAuth' | 'AzureAD' | 'Google' | 'Okta';
 

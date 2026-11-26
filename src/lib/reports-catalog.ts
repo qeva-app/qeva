@@ -23,12 +23,12 @@ export type ReportCatalogItem = {
   requiresOrg: boolean;
 };
 
-/** Product catalog — each type answers a question live dashboards do not export. */
+/** Product catalog - each type answers a question live dashboards do not export. */
 export const REPORT_CATALOG: ReportCatalogItem[] = [
   {
     id: 'audit_export',
     label: 'Audit log export',
-    description: 'Who did what, when — filterable activity for auditors.',
+    description: 'Who did what, when - filterable activity for auditors.',
     category: 'Evidence',
     requiresOrg: true,
   },

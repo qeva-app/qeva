@@ -75,6 +75,7 @@ export default function AddPasswordModal({
   const [generating, setGenerating] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [batchQueue, setBatchQueue] = useState<{ password: string; title?: string }[]>([]);
+  const [useMasterKey, setUseMasterKey] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -121,6 +122,7 @@ export default function AddPasswordModal({
     }
     setForm(base);
     setStrength(0);
+    setUseMasterKey(!!encState.isEnabled);
 
     fetch('/api/categories')
       .then((r) => r.json())
@@ -130,7 +132,7 @@ export default function AddPasswordModal({
       .then((r) => r.json())
       .then((data) => setServices(Array.isArray(data) ? data : []))
       .catch(() => setServices([]));
-  }, [isOpen, defaultTeamId, defaultScope]);
+  }, [isOpen, defaultTeamId, defaultScope, encState.isEnabled]);
 
   useEffect(() => {
     if (!isOpen || !canAccessTeams) {
@@ -217,7 +219,14 @@ export default function AddPasswordModal({
         serviceId: form.serviceId || null,
       };
 
-      if (scope === 'personal' && isClientVaultUnlocked()) {
+      const wantMaster =
+        scope === 'personal' && useMasterKey && encState.isEnabled;
+      if (wantMaster) {
+        if (!isClientVaultUnlocked()) {
+          toast.error('Unlock your vault to use master-password encryption');
+          setLoading(false);
+          return;
+        }
         payload.clientEncrypted = true;
         payload.encryptionType = 'USER_MASTER';
         payload.encryptedPassword = await encryptWithClientDek(form.password);
@@ -279,7 +288,7 @@ export default function AddPasswordModal({
         {encState.isEnabled && !encState.isUnlocked && (
           <div className="mx-5 mt-4 flex items-center gap-2 rounded-lg border border-warning/20 bg-warning/10 p-3 text-xs text-warning">
             <Lock size={14} aria-hidden="true" />
-            Vault locked — saves with server-side encryption.
+            Vault locked - saves with server-side encryption.
           </div>
         )}
         {batchQueue.length > 0 && (
@@ -407,6 +416,29 @@ export default function AddPasswordModal({
                 </div>
               )}
             </div>
+          )}
+
+          {scope === 'personal' && (
+            <label
+              className={`flex items-start gap-2 text-sm ${encState.isEnabled ? 'cursor-pointer' : 'cursor-default opacity-70'}`}
+            >
+              <input
+                type="checkbox"
+                className="mt-0.5 rounded border-border"
+                checked={encState.isEnabled && useMasterKey}
+                disabled={!encState.isEnabled}
+                readOnly={!encState.isEnabled}
+                onChange={(e) => setUseMasterKey(e.target.checked)}
+              />
+              <span>
+                Encrypt with master password (zero-knowledge)
+                {!encState.isEnabled && (
+                  <span className="block text-xs text-muted-foreground">
+                    Enable encryption in Settings to use this.
+                  </span>
+                )}
+              </span>
+            </label>
           )}
 
           <details className="group rounded-lg border border-border/70 px-3 py-2">

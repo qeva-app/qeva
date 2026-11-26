@@ -1,4 +1,4 @@
-﻿/** Community stub — real directory sync lives in qeva-enterprise overlay. */
+/** Community stub - real directory sync lives in qeva-enterprise overlay. */
 import {
   DEFAULT_FIELD_MAPPING,
   DIRECTORY_MAPPABLE_FIELDS,

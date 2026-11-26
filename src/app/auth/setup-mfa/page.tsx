@@ -150,7 +150,7 @@ export default function SetupMfaPage() {
             className="btn-primary h-11 w-full font-semibold"
             onClick={() => finish(false, true)}
           >
-            I saved them — continue
+            I saved them - continue
             <ArrowRight size={16} className="ml-2 inline" />
           </button>
         </AuthBlock>

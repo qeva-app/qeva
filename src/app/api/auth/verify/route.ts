@@ -3,7 +3,7 @@ import prisma from '@/lib/db';
 import { otpSchema } from '@/lib/validation';
 import { checkRateLimit } from '@/lib/api';
 import { getClientIp } from '@/lib/request-ip';
-import { verifyOtpHash } from '@/lib/otp';
+import { otpProvesEmail, verifyOtpHash } from '@/lib/otp';
 import { logAudit, AuditActions } from '@/lib/audit';
 
 export async function POST(req: NextRequest) {
@@ -36,7 +36,14 @@ export async function POST(req: NextRequest) {
     }
 
     if (!user.otp || !user.otpExpiry) {
-      return NextResponse.json({ error: 'No OTP pending. Please request a new one.' }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: user.accountReady
+            ? 'Account is unlocked but email is not verified. Configure SMTP and resend a code.'
+            : 'No OTP pending. Please request a new one.',
+        },
+        { status: 400 }
+      );
     }
 
     if (new Date() > user.otpExpiry) {
@@ -47,10 +54,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid OTP' }, { status: 400 });
     }
 
+    const emailVerified = otpProvesEmail(user.otp);
+
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        isVerified: true,
+        accountReady: true,
+        // Never set isVerified from a console/log OTP
+        ...(emailVerified ? { isVerified: true } : {}),
         otp: null,
         otpExpiry: null,
       },
@@ -58,12 +69,22 @@ export async function POST(req: NextRequest) {
 
     await logAudit({
       userId: user.id,
-      action: AuditActions.EMAIL_VERIFIED,
+      action: emailVerified ? AuditActions.EMAIL_VERIFIED : AuditActions.USER_VERIFIED,
       resource: 'user',
+      details: {
+        via: emailVerified ? 'email_otp' : 'console_otp',
+        emailVerified,
+      },
       req,
     });
 
-    return NextResponse.json({ message: 'Email verified successfully' });
+    return NextResponse.json({
+      message: emailVerified
+        ? 'Email verified successfully'
+        : 'Account unlocked. Configure SMTP later to verify your email address.',
+      emailVerified,
+      accountReady: true,
+    });
   } catch (error) {
     return NextResponse.json({ error: 'Verification failed' }, { status: 500 });
   }

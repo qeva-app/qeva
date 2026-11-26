@@ -3,7 +3,7 @@
  * Run: node scripts/selfcheck-browser-import.js
  */
 const { createRequire } = require('module');
-// Use ts via compiled path — duplicate minimal detect for CI without ts-node
+// Use ts via compiled path - duplicate minimal detect for CI without ts-node
 function parseCSVLine(line) {
   const result = [];
   let current = '';

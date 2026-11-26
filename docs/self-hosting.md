@@ -2,7 +2,7 @@
 
 Run Qeva on your own infrastructure. Vault data stays in your PostgreSQL volume (or external Postgres/Supabase).
 
-**Individuals only:** the Community image (`QEVA_EDITION=community`) is a personal vault — no company signup, teams, SSO, or org admin tools. Those need Enterprise.
+**Individuals only:** the Community image (`QEVA_EDITION=community`) is a personal vault - no company signup, teams, SSO, or org admin tools. Those need Enterprise.
 
 ## Requirements
 
@@ -41,7 +41,7 @@ docker build --build-arg SUPER_ADMIN_EMAIL=admin@example.com -t qeva:ce .
 
 ## External Postgres / Supabase
 
-1. Set `QEVA_DATABASE_URL` in `.env` to your Postgres or Supabase connection string (must start with `postgresql://` or `postgres://`). Do not put a localhost `DATABASE_URL` in the shell — Compose will pick it up and break the container.
+1. Set `QEVA_DATABASE_URL` in `.env` to your Postgres or Supabase connection string (must start with `postgresql://` or `postgres://`). Do not put a localhost `DATABASE_URL` in the shell - Compose will pick it up and break the container.
 2. Set `SUPER_ADMIN_EMAIL` (and secrets as above). `DB_PASSWORD` is unused when not using the bundled profile.
 3. Start **without** the bundled profile:
 
@@ -66,7 +66,7 @@ Supabase tip: prefer the direct connection for migrations/`db push`, or the pool
 
 Full template: [`.env.example`](../.env.example).
 
-**Production:** never set `ALLOW_DEV_OTP=true`. That bypass is for emergency/local UAT only when SMTP is unavailable.
+**Email / OTP:** set `EMAIL_SERVER_HOST` and `EMAIL_SERVER_PASSWORD` so verification and reset codes go to the user’s inbox (and `isVerified` can be set). Without SMTP, registration and reset print `QEVA_SETUP_OTP=…` in container logs — that unlocks the account for sign-in but does **not** mark the email verified. Fixed/shared development OTP codes are not supported.
 
 ## Browser extension
 
@@ -87,7 +87,7 @@ git pull
 docker compose --profile bundled up -d --build
 ```
 
-On start the container runs `prisma db push` (schema sync). Formal migration history is not required for single-instance self-host yet — back up the `postgres-data` volume before upgrades.
+On start the container runs `prisma db push` (schema sync). Formal migration history is not required for single-instance self-host yet - back up the `postgres-data` volume before upgrades.
 
 ## Backup
 
@@ -95,15 +95,15 @@ Stop or snapshot the `postgres-data` Docker volume (or your external DB backups)
 
 ## Managed hosting
 
-Self-host is the supported path today. To be notified when Qeva runs hosting for you, use **Get notified** on [qeva.in](https://qeva.in) (stores an interest entry — not a live tenant).
+Self-host is the supported path today. To be notified when Qeva runs hosting for you, use **Get notified** on [qeva.in](https://qeva.in) (stores an interest entry - not a live tenant).
 
 ## Troubleshooting
 
 | Symptom | Check |
 |---------|--------|
-| `503` on `/api/health` | `docker compose logs postgres` — still starting / bad `DB_PASSWORD` |
+| `503` on `/api/health` | `docker compose logs postgres` - still starting / bad `DB_PASSWORD` |
 | Redirect loop | Clear `FORCE_HTTPS` or fix proxy `X-Forwarded-Proto` |
-| Build fails on Prisma | Image targets `linux-musl-openssl-3.0.x` — rebuild without cache |
+| Build fails on Prisma | Image targets `linux-musl-openssl-3.0.x` - rebuild without cache |
 | No admin password in logs | Admin already existed, or `SUPER_ADMIN_EMAIL` unset; only printed on first create |
 | Prisma URL error | `DATABASE_URL` must be `postgresql://…` (not SQL Server) |
 

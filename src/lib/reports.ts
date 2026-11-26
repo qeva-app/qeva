@@ -111,7 +111,7 @@ async function genAuditExport(organizationId: string, start: Date): Promise<Gene
 
   const findings: string[] = [];
   if (logs.length === 0) findings.push('No audit events in this period for your organization');
-  if (logs.length >= 10000) findings.push('Export capped at 10,000 events — narrow the period if needed');
+  if (logs.length >= 10000) findings.push('Export capped at 10,000 events - narrow the period if needed');
 
   return {
     summary: { totalEvents: logs.length, capped: logs.length >= 10000 },
@@ -123,7 +123,7 @@ async function genAuditExport(organizationId: string, start: Date): Promise<Gene
 }
 
 async function genVaultHealth(organizationId: string): Promise<GeneratedReport> {
-  // shortcut: strength/expiry/staleness only (no decrypt/reuse) — upgrade when org-wide reuse reports are needed
+  // shortcut: strength/expiry/staleness only (no decrypt/reuse) - upgrade when org-wide reuse reports are needed
   const passwords = await prisma.passwordEntry.findMany({
     where: {
       OR: [{ user: { organizationId } }, { team: { organizationId } }],
@@ -824,7 +824,7 @@ async function genCompliancePack(organizationId: string, start: Date): Promise<G
 }
 
 async function genBackup(start: Date): Promise<GeneratedReport> {
-  // shortcut: BackupConfig has no organizationId — platform-wide; callers must gate to super admin
+  // shortcut: BackupConfig has no organizationId - platform-wide; callers must gate to super admin
   const jobs = await prisma.backupJob.findMany({
     where: { createdAt: { gte: start } },
     orderBy: { createdAt: 'desc' },

@@ -120,7 +120,7 @@ export default function BrowserImport() {
           />
           <h3 className="text-lg font-semibold text-foreground mb-2">Upload Password File</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            CSV or JSON export — Bitwarden JSON, 1Password CSV/JSON, LastPass CSV supported
+            CSV or JSON export - Bitwarden JSON, 1Password CSV/JSON, LastPass CSV supported
           </p>
 
           <div className="flex flex-wrap justify-center gap-2 mb-6">

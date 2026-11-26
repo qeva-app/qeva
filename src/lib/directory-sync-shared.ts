@@ -1,4 +1,4 @@
-/** Shared (client-safe) directory sync field catalog — no Node/Prisma imports. */
+/** Shared (client-safe) directory sync field catalog - no Node/Prisma imports. */
 
 export const DIRECTORY_MAPPABLE_FIELDS = [
   'firstName',

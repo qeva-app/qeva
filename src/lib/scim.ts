@@ -1,4 +1,4 @@
-﻿/** Community stub — real SCIM lives in qeva-enterprise overlay. */
+/** Community stub - real SCIM lives in qeva-enterprise overlay. */
 import { createHash, randomBytes } from 'crypto';
 
 export function hashScimToken(token: string): string {

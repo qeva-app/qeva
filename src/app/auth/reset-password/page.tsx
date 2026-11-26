@@ -36,8 +36,13 @@ export default function ResetPasswordPage() {
         body: JSON.stringify({ email }),
       });
       if (res.ok) {
-        // Worded like the API response: it doesn't confirm whether the account exists.
-        toast.success('If that email has an account, a reset code is on its way.');
+        const data = await res.json().catch(() => ({}));
+        // Same generic success whether or not the account exists; emailSent only when SMTP ran.
+        toast.success(
+          data.emailSent === false
+            ? 'If that account exists, the reset code is in the server logs (QEVA_SETUP_OTP).'
+            : 'If that email has an account, a reset code is on its way.'
+        );
         setStep(2);
       } else {
         const data = await res.json();

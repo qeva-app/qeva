@@ -16,7 +16,7 @@ export function startKeepAlive(baseUrl: string): void {
           signal: AbortSignal.timeout(10000),
         });
       } catch {
-        // Silently ignore — keep-alive is best-effort
+        // Silently ignore - keep-alive is best-effort
       }
     }
   }, INTERVAL_MS);

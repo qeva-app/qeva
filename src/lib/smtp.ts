@@ -25,8 +25,8 @@ export async function sendOTPEmail(
 ): Promise<void> {
   const subject =
     type === 'verification'
-      ? 'Qeva — Email Verification Code'
-      : 'Qeva — Password Reset Code';
+      ? 'Qeva - Email Verification Code'
+      : 'Qeva - Password Reset Code';
 
   const html = `
     <!DOCTYPE html>
@@ -113,7 +113,7 @@ export async function sendEmail(
   }
 }
 
-/** Org invite — activation link only; never include a password. */
+/** Org invite - activation link only; never include a password. */
 export async function sendInviteEmail(params: {
   to: string;
   name: string;

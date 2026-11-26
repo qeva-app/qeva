@@ -127,7 +127,7 @@ export default function ReportsPage() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Reports</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Point-in-time evidence packs and exception exports — not live dashboards.
+          Point-in-time evidence packs and exception exports - not live dashboards.
         </p>
       </div>
 
@@ -180,7 +180,7 @@ export default function ReportsPage() {
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-foreground truncate">{r.name}</p>
                 <p className="text-xs text-muted-foreground">
-                  {labelForType(r.type)} · {r.format} · {r.period || '—'} ·{' '}
+                  {labelForType(r.type)} · {r.format} · {r.period || '-'} ·{' '}
                   {new Date(r.createdAt).toLocaleString()}
                 </p>
                 {r.findings && (
@@ -221,7 +221,7 @@ export default function ReportsPage() {
           ))}
           {reports.length === 0 && (
             <p className="text-center text-sm text-muted-foreground py-10">
-              No reports generated yet — pick a catalog item above.
+              No reports generated yet - pick a catalog item above.
             </p>
           )}
         </div>

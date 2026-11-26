@@ -133,7 +133,7 @@ export function CommandPalette() {
           ) : isOrgUser ? (
             <CommandItem disabled value="security-locked">
               <Lock className="mr-2 h-4 w-4" />
-              Security Scan — unlocks after approval
+              Security Scan - unlocks after approval
             </CommandItem>
           ) : null}
         </CommandGroup>
@@ -158,7 +158,7 @@ export function CommandPalette() {
             ) : (
               <CommandItem disabled value="teams-locked">
                 <Lock className="mr-2 h-4 w-4" />
-                Teams — unlocks after approval
+                Teams - unlocks after approval
               </CommandItem>
             )
           )}
@@ -171,7 +171,7 @@ export function CommandPalette() {
             ) : (
               <CommandItem disabled value="services-locked">
                 <Lock className="mr-2 h-4 w-4" />
-                Services — unlocks after approval
+                Services - unlocks after approval
               </CommandItem>
             )
           )}
@@ -205,7 +205,7 @@ export function CommandPalette() {
                 ) : (
                   <CommandItem key={item.href} disabled value={`${item.href}-locked`}>
                     <Lock className="mr-2 h-4 w-4" />
-                    {item.label} — unlocks after approval
+                    {item.label} - unlocks after approval
                   </CommandItem>
                 )
               )}

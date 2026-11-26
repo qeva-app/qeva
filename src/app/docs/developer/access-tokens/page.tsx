@@ -37,7 +37,7 @@ export default function AccessTokensDocsPage() {
                 title: 'Generate',
                 body: (
                   <>
-                    Create a token — choose <strong>AI agent</strong> for agent clients.
+                    Create a token - choose <strong>AI agent</strong> for agent clients.
                   </>
                 ),
               },
@@ -96,7 +96,7 @@ export QEVA_TOKEN=qeva_xxxxxxxxxxxx`}
               <>
                 Audit trail includes <InlineCode>clientKind</InlineCode>
               </>,
-              'Revoke in Settings — immediate',
+              'Revoke in Settings - immediate',
             ].map((item, i) => (
               <li key={i} className="rounded-xl border border-border bg-card px-3.5 py-3 text-sm shadow-sm">
                 {item}

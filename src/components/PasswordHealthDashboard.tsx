@@ -119,7 +119,7 @@ export default function PasswordHealthDashboard() {
           <Card>
             <CardContent className="p-4 text-center">
               <p className="font-display text-2xl font-semibold text-warning">{summary.expired}</p>
-              <p className="text-xs text-muted-foreground">Expired — open vault</p>
+              <p className="text-xs text-muted-foreground">Expired - open vault</p>
             </CardContent>
           </Card>
         </Link>
@@ -181,14 +181,14 @@ export default function PasswordHealthDashboard() {
             <CardTitle className="flex items-center gap-2 font-display text-sm text-destructive">
               <CopyIcon size={14} /> Reused Passwords
             </CardTitle>
-            <CardDescription>These passwords are shared across multiple entries — a critical security risk</CardDescription>
+            <CardDescription>These passwords are shared across multiple entries - a critical security risk</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               {reusedGroups.map((group: string[], i: number) => (
                 <div key={i} className="rounded-lg bg-destructive/10 px-3 py-2 text-sm">
                   <span className="font-medium text-destructive">{group.join(', ')}</span>
-                  <span className="ml-2 text-xs text-destructive/70">— same password</span>
+                  <span className="ml-2 text-xs text-destructive/70"> - same password</span>
                 </div>
               ))}
             </div>
@@ -199,7 +199,7 @@ export default function PasswordHealthDashboard() {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="font-display text-sm">All Credentials</CardTitle>
-          <CardDescription>Sorted by health score — worst first</CardDescription>
+          <CardDescription>Sorted by health score - worst first</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-1.5">

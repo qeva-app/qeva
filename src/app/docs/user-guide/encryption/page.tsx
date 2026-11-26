@@ -36,7 +36,7 @@ export default function EncryptionGuidePage() {
             <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
               <p className="font-medium text-foreground">USER_MASTER</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Per-user master password. Unlock and personal crypto stay in the browser — the master password is not
+                Per-user master password. Unlock and personal crypto stay in the browser - the master password is not
                 sent to the server.
               </p>
             </div>

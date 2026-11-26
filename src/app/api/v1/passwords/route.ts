@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
     encryptionType: p.encryptionType,
   }));
 
-  // Website access (extension/agent host lookup) — one row per host per 5m, not every poll
+  // Website access (extension/agent host lookup) - one row per host per 5m, not every poll
   if (withSecrets && list.length > 0) {
     const hostKey = host.toLowerCase();
     const tokenId = auditClient(auth).tokenId || 'session';
@@ -134,9 +134,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Password is required' }, { status: 400 });
   }
 
-  // Capture existing site passwords as-is — org policy applies to new secrets in-app,
+  // Capture existing site passwords as-is - org policy applies to new secrets in-app,
   // not to logins already in use on third-party sites.
-  // Extension / agents cannot hold the client DEK — store as PUBLIC_KEY
+  // Extension / agents cannot hold the client DEK - store as PUBLIC_KEY
   const encryptedPassword = encrypt(parsed.data.password);
 
   const entry = await prisma.passwordEntry.create({

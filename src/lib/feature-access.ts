@@ -58,11 +58,11 @@ export interface FeatureAccess {
   canAccessAnalytics: boolean;
   canAccessDatabase: boolean;
   canAccessSecurityScan: boolean;
-  /** Enterprise edition only — directory IdP sync panel */
+  /** Enterprise edition only - directory IdP sync panel */
   canAccessDirectorySync: boolean;
-  /** Enterprise edition only — SIEM export */
+  /** Enterprise edition only - SIEM export */
   canAccessSiem: boolean;
-  /** Enterprise edition only — Slack/Teams alert channels */
+  /** Enterprise edition only - Slack/Teams alert channels */
   canAccessAlerts: boolean;
 
   // State flags
@@ -83,7 +83,7 @@ export interface FeatureAccess {
 interface UserForAccess {
   accountType?: string | null;
   role?: string;
-  /** Platform allowlist — unlocks admin surfaces without requiring org ADMIN role. */
+  /** Platform allowlist - unlocks admin surfaces without requiring org ADMIN role. */
   isSuperAdmin?: boolean;
   organization?: {
     id: string;
@@ -96,7 +96,7 @@ interface UserForAccess {
 }
 
 export function getUserFeatureAccess(user: UserForAccess): FeatureAccess {
-  // Community Docker / OSS image: personal vault only — ignore any org membership.
+  // Community Docker / OSS image: personal vault only - ignore any org membership.
   if (!allowsCompanyAccounts()) {
     return {
       canAccessTeams: false,
@@ -156,7 +156,7 @@ export function getUserFeatureAccess(user: UserForAccess): FeatureAccess {
       trialDaysRemaining = Math.max(0, Math.ceil(msRemaining / (1000 * 60 * 60 * 24)));
 
       if (trialDaysRemaining <= 0) {
-        // Trial expired — enter grace period
+        // Trial expired - enter grace period
         isReadOnly = true;
         const graceEnd = new Date(trialEnd);
         graceEnd.setDate(graceEnd.getDate() + 30);

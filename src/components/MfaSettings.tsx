@@ -98,7 +98,7 @@ export default function MfaSettings() {
       {backupCodes && (
         <div className="mb-4 p-3 rounded-lg border border-warning/30 bg-warning/5 space-y-2">
           <p className="text-sm font-medium text-foreground">
-            Save these backup codes now — they won&apos;t be shown again.
+            Save these backup codes now - they won&apos;t be shown again.
           </p>
           <ul className="font-mono text-xs grid grid-cols-2 gap-1">
             {backupCodes.map((c) => (

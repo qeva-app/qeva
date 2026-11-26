@@ -14,7 +14,7 @@ export interface EncryptionSetupResult {
   masterPasswordHash: string;
   dekHash: string;
   salt: string;
-  /** In-process only — never send to the client */
+  /** In-process only - never send to the client */
   dek: Buffer;
   recoveryData: {
     userId: string;
@@ -62,7 +62,7 @@ export async function setupUserEncryption(
   };
 }
 
-/** Legacy server unlock — prefer client unlockClientVault. */
+/** Legacy server unlock - prefer client unlockClientVault. */
 export async function unlockUserVault(
   userId: string,
   masterPassword: string
@@ -154,7 +154,7 @@ export async function recoverEncryption(
   if (user?.dekHash) {
     const dekHash = hashSHA256(dek);
     if (dekHash !== user.dekHash) {
-      throw new Error('Recovery file does not match — DEK integrity check failed');
+      throw new Error('Recovery file does not match - DEK integrity check failed');
     }
   }
 

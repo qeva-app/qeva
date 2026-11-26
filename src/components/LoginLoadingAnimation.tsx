@@ -1,6 +1,6 @@
 'use client';
 
-/** Plain status overlay — kept for any leftover imports; prefer immediate redirect. */
+/** Plain status overlay - kept for any leftover imports; prefer immediate redirect. */
 export default function LoginLoadingAnimation() {
   return (
     <div

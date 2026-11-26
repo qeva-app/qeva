@@ -247,7 +247,7 @@ export default function SecurityScanDashboard() {
                           {trendIcon(scan.riskScore, history[i + 1].riskScore)}
                         </span>
                       ) : (
-                        <span className="text-xs text-muted-foreground">—</span>
+                        <span className="text-xs text-muted-foreground"> - </span>
                       )}
                     </td>
                   </tr>

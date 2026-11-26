@@ -9,7 +9,7 @@ import {
   getPasswordAccessContext,
 } from '@/lib/password-access';
 
-// GET — list user's shared links (optionally filter by passwordEntryId)
+// GET - list user's shared links (optionally filter by passwordEntryId)
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
   );
 }
 
-// POST — create a new shared link
+// POST - create a new shared link
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {

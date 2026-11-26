@@ -166,7 +166,7 @@ export async function POST(req: NextRequest) {
     const useOrgKey = (isGlobal || isTeam) && !!ctx.organizationId;
     const orgKey = useOrgKey ? getOrgEncryptionKey(ctx.organizationId!) : undefined;
 
-    // Client-sealed USER_MASTER — server never sees plaintext
+    // Client-sealed USER_MASTER - server never sees plaintext
     if (
       data.clientEncrypted &&
       data.encryptionType === 'USER_MASTER' &&

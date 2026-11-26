@@ -1,4 +1,4 @@
-# QEVA — Pending Features
+# QEVA - Pending Features
 
 Tracked features and enhancements planned for future phases.
 

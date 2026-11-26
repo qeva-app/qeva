@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-/** Community stub — full org console ships with Enterprise. */
+/** Community stub - full org console ships with Enterprise. */
 export default function EnterpriseManagement() {
   return (
     <div className="mx-auto max-w-lg py-16 text-center">

@@ -638,9 +638,9 @@ export default function UsersPage() {
                       disabled={managerSavingId === user.id}
                       value={user.managerId || ''}
                       onChange={(e) => handleSetManager(user.id, e.target.value)}
-                      title="Optional — who this person reports to"
+                      title="Optional - who this person reports to"
                     >
-                      <option value="">— None —</option>
+                      <option value=""> - None  - </option>
                       {managerChoices.map((m) => (
                         <option key={m.id} value={m.id}>
                           {m.name || m.email}
@@ -666,7 +666,7 @@ export default function UsersPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '—'}
+                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-1">

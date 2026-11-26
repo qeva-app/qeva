@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 
-/** Auth-only vault material for client-side unlock — no master password involved. */
+/** Auth-only vault material for client-side unlock - no master password involved. */
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {

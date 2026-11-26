@@ -47,7 +47,7 @@ function sha256Hex(data: Uint8Array): string {
   return bytesToHex(sha256(data));
 }
 
-/** Argon2id KEK — same params as server `deriveKey` in encryption-unified.ts */
+/** Argon2id KEK - same params as server `deriveKey` in encryption-unified.ts */
 async function deriveKekRaw(masterPassword: string, saltHex: string): Promise<Uint8Array> {
   const password = new TextEncoder().encode(masterPassword);
   const salt = hexToBytes(saltHex);
@@ -152,7 +152,7 @@ export function lockClientVault(): void {
   unlockedAt = 0;
 }
 
-/** Unlock from sealed material — master password stays in the browser. Returns dekHash. */
+/** Unlock from sealed material - master password stays in the browser. Returns dekHash. */
 export async function unlockClientVault(opts: {
   masterPassword: string;
   salt: string;

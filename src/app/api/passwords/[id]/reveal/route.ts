@@ -11,7 +11,7 @@ import {
 } from '@/lib/password-access';
 import { checkRateLimit } from '@/lib/api';
 
-/** Decrypt a single vault entry on demand — USER_MASTER returns ciphertext for client decrypt. */
+/** Decrypt a single vault entry on demand - USER_MASTER returns ciphertext for client decrypt. */
 export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }

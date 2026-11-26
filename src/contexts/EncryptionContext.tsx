@@ -109,7 +109,7 @@ export function EncryptionProvider({ children }: { children: React.ReactNode }) 
     async (masterPassword: string) => {
       try {
         const built = await buildClientSetupMaterial(masterPassword);
-        // Master password stays in the browser — only sealed material is posted
+        // Master password stays in the browser - only sealed material is posted
         const res = await fetch('/api/encryption/setup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

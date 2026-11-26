@@ -6,7 +6,7 @@ const assert = require('assert');
 const path = require('path');
 
 async function main() {
-  // Load compiled-free TS via next's path — use dynamic import of built helpers is hard;
+  // Load compiled-free TS via next's path - use dynamic import of built helpers is hard;
   // duplicate minimal checks that mirror service-probe guards for CI without ts-node.
   function isPrivateIp(ip) {
     const net = require('net');
@@ -53,7 +53,7 @@ async function main() {
   assert.strictEqual(looksLikeExecutable('profile.json', Buffer.from('{"type":"postgres"}')), false);
   assert.strictEqual(looksLikeExecutable('x.bin', Buffer.from([0x4d, 0x5a, 0x90, 0x00])), true);
 
-  // Zod schema via requiring compiled path — skip; validate JSON shape manually
+  // Zod schema via requiring compiled path - skip; validate JSON shape manually
   const profile = JSON.parse('{"type":"http_header","url":"https://api.datadoghq.com/api/v1/validate","headerName":"DD-API-KEY","password":"x"}');
   assert.strictEqual(profile.type, 'http_header');
   assert.ok(profile.url.startsWith('https://'));

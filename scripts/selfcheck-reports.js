@@ -5,7 +5,7 @@
 const assert = require('assert');
 const path = require('path');
 
-// Load compiled-free TS via next/tsx isn't available — duplicate tiny helpers for offline check
+// Load compiled-free TS via next/tsx isn't available - duplicate tiny helpers for offline check
 function csvCell(value) {
   if (value == null) return '';
   const s = String(value);

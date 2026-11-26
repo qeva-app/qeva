@@ -28,7 +28,7 @@ export function startWeeklyEmailScheduler(): void {
           );
           await sendEmail(
             user.email,
-            'Qeva — Your Weekly Security Summary',
+            'Qeva - Your Weekly Security Summary',
             html
           );
         } catch (error) {
@@ -43,7 +43,7 @@ export function startWeeklyEmailScheduler(): void {
     }
   });
 
-  logger.info('Weekly email scheduler started — Monday 10:00 AM IST');
+  logger.info('Weekly email scheduler started - Monday 10:00 AM IST');
 }
 
 export function stopWeeklyEmailScheduler(): void {

@@ -128,7 +128,7 @@ export const PROBE_TYPES = [
 
 export type ProbeType = (typeof PROBE_TYPES)[number];
 
-/** Non-executable connection profile — never treated as code/driver. */
+/** Non-executable connection profile - never treated as code/driver. */
 export const connectionProfileSchema = z
   .object({
     type: z.enum(PROBE_TYPES),

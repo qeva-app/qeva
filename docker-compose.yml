@@ -1,4 +1,4 @@
-# Community Edition — Qeva + PostgreSQL (bundled) or external Postgres/Supabase.
+# Community Edition - Qeva + PostgreSQL (bundled) or external Postgres/Supabase.
 #
 # Bundled DB:
 #   docker compose --profile bundled up -d --build
@@ -23,7 +23,7 @@ services:
     env_file:
       - .env
     environment:
-      # Locked production — do not take NODE_ENV from .env (would enable Next dev behavior).
+      # Locked production - do not take NODE_ENV from .env (would enable Next dev behavior).
       NODE_ENV: production
       # Use QEVA_DATABASE_URL for external/Supabase. Do not use host DATABASE_URL
       # (Windows/shell often points at localhost and breaks the container).

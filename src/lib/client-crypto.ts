@@ -79,6 +79,6 @@ export async function preWarmPublicKey(): Promise<void> {
   try {
     await getPublicKey();
   } catch {
-    // Silently fail — will retry on actual use
+    // Silently fail - will retry on actual use
   }
 }

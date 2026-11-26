@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 
-/** Toggle favorite — only the entry owner (isFavorite is stored on the shared row). */
+/** Toggle favorite - only the entry owner (isFavorite is stored on the shared row). */
 export async function POST(
   _req: NextRequest,
   { params }: { params: { id: string } }

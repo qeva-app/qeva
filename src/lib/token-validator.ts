@@ -20,7 +20,7 @@ export async function validateAccessToken(
 }> {
   const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
 
-  // Only accept hashed tokens — plaintext legacy rows are no longer valid
+  // Only accept hashed tokens - plaintext legacy rows are no longer valid
   const accessToken = await prisma.accessToken.findFirst({
     where: {
       token: tokenHash,
@@ -71,7 +71,7 @@ export async function validateAccessToken(
   };
 }
 
-/** Empty/missing scopes grant nothing — recreate legacy tokens with explicit scopes. */
+/** Empty/missing scopes grant nothing - recreate legacy tokens with explicit scopes. */
 export function tokenHasScope(scopes: string[] | undefined, required: string): boolean {
   if (!scopes || scopes.length === 0) return false;
   if (scopes.includes('*') || scopes.includes('passwords:*')) return true;

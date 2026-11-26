@@ -23,7 +23,10 @@ model User {
 
   // Status
   isActive            Boolean @default(true)
+  /// True only after an OTP that was actually emailed (SMTP), or invite link from email
   isVerified          Boolean @default(false)
+  /// Sign-in allowed after email verify, console setup OTP, invite activate, or bootstrap seed
+  accountReady        Boolean @default(false)
   /// True for bootstrap / invited accounts until they set their own password
   mustChangePassword  Boolean @default(false)
   /// Prompt MFA setup once after signup / first password (skippable)

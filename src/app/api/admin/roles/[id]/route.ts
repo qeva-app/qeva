@@ -88,7 +88,7 @@ async function handlePut(req: NextRequest, { params }: { params: { id: string } 
         : null;
 
     if (gate.role.isSystem) {
-      // Super Admin editing templates — allow full org catalog
+      // Super Admin editing templates - allow full org catalog
       if (!Array.isArray(raw)) {
         return NextResponse.json({ error: 'permissions must be an array' }, { status: 400 });
       }
@@ -110,7 +110,7 @@ async function handlePut(req: NextRequest, { params }: { params: { id: string } 
       data,
     });
 
-    // shortcut: permission cache has no prefix delete — clear on rare role edits
+    // shortcut: permission cache has no prefix delete - clear on rare role edits
     cache.clear();
 
     await logAudit({

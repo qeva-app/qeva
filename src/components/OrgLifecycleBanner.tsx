@@ -40,7 +40,7 @@ export default function OrgLifecycleBanner() {
     }
   };
 
-  // Locked-out stays visible — blocking state, not dismissible noise
+  // Locked-out stays visible - blocking state, not dismissible noise
   if (access.isLockedOut) {
     return (
       <div className="border-b border-destructive/30 bg-destructive/10 px-6 py-2">
@@ -65,7 +65,7 @@ export default function OrgLifecycleBanner() {
     Icon = ShieldAlert;
     message = (
       <>
-        <span className="font-semibold">{access.orgName}</span> awaits approval — personal vault works; teams, global vault, and admin tools unlock after activation.
+        <span className="font-semibold">{access.orgName}</span> awaits approval - personal vault works; teams, global vault, and admin tools unlock after activation.
       </>
     );
   } else if (access.isReadOnly && (access.graceDaysRemaining != null || access.orgStatus === 'GRACE')) {
@@ -74,7 +74,7 @@ export default function OrgLifecycleBanner() {
       <>
         Grace period
         {access.graceDaysRemaining != null ? `, ${access.graceDaysRemaining}d left` : ''}
-        — vault is read-only until upgraded.
+ - vault is read-only until upgraded.
       </>
     );
   } else if (

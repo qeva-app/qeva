@@ -31,11 +31,11 @@ import { allowsCompanyAccounts } from './edition';
 
 // Session cache
 const sessionCache = new Map<string, { user: any; timestamp: number }>();
-const SESSION_CACHE_TTL = 30 * 1000; // 30s — keep short so deactivation propagates across instances
-const DB_REVALIDATION_INTERVAL = 30 * 1000; // 30s — always re-check isActive soon after revoke
+const SESSION_CACHE_TTL = 30 * 1000; // 30s - keep short so deactivation propagates across instances
+const DB_REVALIDATION_INTERVAL = 30 * 1000; // 30s - always re-check isActive soon after revoke
 const INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
-// In-memory revocation list — when a user is deactivated, add their ID here
+// In-memory revocation list - when a user is deactivated, add their ID here
 // JWT callback checks this on every request for instant revocation
 const revokedUserIds = new Set<string>();
 
@@ -145,6 +145,7 @@ export const authOptions: NextAuthOptions = {
               password: true,
               isActive: true,
               isVerified: true,
+              accountReady: true,
               image: true,
               accountType: true,
               organizationId: true,
@@ -163,7 +164,8 @@ export const authOptions: NextAuthOptions = {
           const isValid = await bcrypt.compare(password, user.password);
           if (!isValid) return await fail('invalid_credentials', user.id);
 
-          if (!user.isVerified) {
+          // accountReady: email OTP, console setup OTP, invite, or bootstrap (isVerified alone is legacy)
+          if (!user.accountReady && !user.isVerified) {
             throw new Error('EMAIL_NOT_VERIFIED');
           }
 
@@ -260,7 +262,7 @@ export const authOptions: NextAuthOptions = {
       const providerId = account.provider;
       const ssoType = ssoTypeFromAuthProviderId(providerId);
       if (!ssoType) {
-        logger.warn('SSO sign-in rejected — provider not wired', { providerId });
+        logger.warn('SSO sign-in rejected - provider not wired', { providerId });
         return false;
       }
 
@@ -338,7 +340,7 @@ export const authOptions: NextAuthOptions = {
         token.picture = user.image ?? undefined;
         token.mustChangePassword = !!user.mustChangePassword;
         token.mfaPromptPending = !!user.mfaPromptPending;
-        // Community Docker is individuals-only — never expose org session state.
+        // Community Docker is individuals-only - never expose org session state.
         if (allowsCompanyAccounts()) {
           token.accountType = user.accountType || 'INDIVIDUAL';
           token.organizationId = user.organizationId || null;
@@ -350,7 +352,7 @@ export const authOptions: NextAuthOptions = {
         token.lastUserCheck = Date.now();
 
         if (account && account.provider !== 'credentials') {
-          // SSO / OAuth — require step-up MFA when enabled on the account
+          // SSO / OAuth - require step-up MFA when enabled on the account
           const dbUser = await prisma.user.findUnique({
             where: { id: user.id },
             select: {
@@ -381,12 +383,12 @@ export const authOptions: NextAuthOptions = {
         return {} as JWT; // Force re-auth
       }
 
-      // Instant revocation check — checked on every JWT validation
+      // Instant revocation check - checked on every JWT validation
       if (token.id && revokedUserIds.has(token.id)) {
         return {} as JWT; // Force re-auth immediately
       }
 
-      // Periodic DB re-validation — never trust a cached "active" longer than SESSION_CACHE_TTL
+      // Periodic DB re-validation - never trust a cached "active" longer than SESSION_CACHE_TTL
       if (token.id && token.lastUserCheck && Date.now() - token.lastUserCheck > DB_REVALIDATION_INTERVAL) {
         try {
           const cachedEntry = sessionCache.get(token.id);
@@ -529,7 +531,7 @@ export async function buildAuthOptions(): Promise<NextAuthOptions> {
       if (cfg.provider === 'AzureAD') {
         const c = cfg.config as Partial<AzureADConfig>;
         if (!c.clientId || !c.clientSecret || !c.tenantId) {
-          logger.warn('Skipping Azure AD SSO — missing clientId/clientSecret/tenantId', {
+          logger.warn('Skipping Azure AD SSO - missing clientId/clientSecret/tenantId', {
             configId: cfg.id,
           });
           continue;
@@ -551,7 +553,7 @@ export async function buildAuthOptions(): Promise<NextAuthOptions> {
       if (cfg.provider === 'Google') {
         const c = cfg.config as Partial<GoogleSSOConfig>;
         if (!c.clientId || !c.clientSecret) {
-          logger.warn('Skipping Google SSO — missing clientId/clientSecret', { configId: cfg.id });
+          logger.warn('Skipping Google SSO - missing clientId/clientSecret', { configId: cfg.id });
           continue;
         }
         providers.push(
@@ -571,7 +573,7 @@ export async function buildAuthOptions(): Promise<NextAuthOptions> {
         const c = cfg.config as Partial<OktaSSOConfig>;
         const issuer = oktaIssuerFromConfig(c);
         if (!c.clientId || !c.clientSecret || !issuer) {
-          logger.warn('Skipping Okta SSO — missing clientId/clientSecret/domain', {
+          logger.warn('Skipping Okta SSO - missing clientId/clientSecret/domain', {
             configId: cfg.id,
           });
           continue;

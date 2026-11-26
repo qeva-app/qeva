@@ -42,19 +42,19 @@ export async function copyWithAutoClear(
   clearAfterMs = CLIPBOARD_CLEAR_MS
 ): Promise<void> {
   await navigator.clipboard.writeText(text);
-  // Same click gesture — improves chance that later verify/clear is allowed
+  // Same click gesture - improves chance that later verify/clear is allowed
   const canVerify = await probeClipboardRead();
 
   if (clearTimer) clearTimeout(clearTimer);
   const generation = ++clearGeneration;
-  // Best-effort only; never toast about clear — many browsers deny delayed clipboard writes
+  // Best-effort only; never toast about clear - many browsers deny delayed clipboard writes
   clearTimer = setTimeout(async () => {
     if (generation !== clearGeneration) return;
     await clearClipboard(text, canVerify);
   }, clearAfterMs);
 }
 
-/** Toast after a copy. Do not promise timed clipboard clear — browsers often block it. */
+/** Toast after a copy. Do not promise timed clipboard clear - browsers often block it. */
 export function toastCopied(
   label: string,
   _opts?: { secret?: boolean; clearAfterMs?: number }

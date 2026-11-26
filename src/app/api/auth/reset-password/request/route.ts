@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
-import logger from '@/lib/logger';
 import { checkRateLimit } from '@/lib/api';
 import { getClientIp } from '@/lib/request-ip';
 import { issueOtp } from '@/lib/otp';
@@ -23,23 +22,14 @@ export async function POST(req: NextRequest) {
       where: { email: email.toLowerCase() },
     });
 
-    // Always return the same message — do not reveal whether the account exists
+    // Always return the same message - do not reveal whether the account exists
     const generic = { message: 'If the email exists, a reset code has been sent.' };
 
     if (!user) {
       return NextResponse.json(generic);
     }
 
-    let otpIssue: Awaited<ReturnType<typeof issueOtp>>;
-    try {
-      otpIssue = await issueOtp(email, 'reset');
-    } catch (e: any) {
-      logger.error('Reset OTP issue failed', { error: e.message });
-      return NextResponse.json(
-        { error: e.message || 'Email verification is not configured' },
-        { status: 503 }
-      );
-    }
+    const otpIssue = await issueOtp(email, 'reset');
 
     await prisma.user.update({
       where: { id: user.id },

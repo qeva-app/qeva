@@ -1,6 +1,6 @@
 import { requireCompanyAccounts } from '@/lib/enterprise-guard';
 
-/** Community stub — org admin APIs are Enterprise-only. */
+/** Community stub - org admin APIs are Enterprise-only. */
 async function unavailable() {
   return requireCompanyAccounts()!;
 }

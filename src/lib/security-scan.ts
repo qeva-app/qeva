@@ -4,7 +4,7 @@ import { decrypt } from './encryption-unified';
 import { getOrgEncryptionKey } from './org-encryption';
 import logger from './logger';
 
-/** HIBP k-anonymity range API — never sends full password. */
+/** HIBP k-anonymity range API - never sends full password. */
 async function hibpPwnedCount(plaintext: string): Promise<number> {
   const sha1 = createHash('sha1').update(plaintext, 'utf8').digest('hex').toUpperCase();
   const prefix = sha1.slice(0, 5);
@@ -78,7 +78,7 @@ export async function runSecurityScan(
       const plaintext = decrypt(pw.encryptedPassword, key);
       decryptedPasswords.set(pw.id, { title: pw.title, plaintext });
     } catch {
-      // Can't decrypt — skip
+      // Can't decrypt - skip
     }
   }
 

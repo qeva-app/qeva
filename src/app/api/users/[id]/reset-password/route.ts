@@ -42,7 +42,7 @@ async function handler(req: NextRequest, { params }: { params: { id: string } })
     req,
   });
 
-  // Returned once to the authorized admin/manager in the same org — not logged.
+  // Returned once to the authorized admin/manager in the same org - not logged.
   return NextResponse.json({
     message: 'Password reset. Share the temporary password securely; it will not be shown again.',
     tempPassword,

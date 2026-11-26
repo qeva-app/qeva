@@ -20,7 +20,7 @@ export default function TeamsGuidePage() {
         title="Teams & collaboration"
         description={
           <>
-            Share passwords securely within your organization. <EditionBadge edition="enterprise" /> only — Community
+            Share passwords securely within your organization. <EditionBadge edition="enterprise" /> only - Community
             is individuals-only.
           </>
         }

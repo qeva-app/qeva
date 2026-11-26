@@ -17,7 +17,7 @@ const guides = [
   {
     href: '/docs/developer/agents',
     title: 'Connect an AI agent',
-    detail: 'Token, CLI, or MCP — same vault ACL as a human.',
+    detail: 'Token, CLI, or MCP - same vault ACL as a human.',
     icon: Bot,
     tone: 'bg-emerald-500/10 text-emerald-700',
   },
@@ -50,7 +50,7 @@ export default function DocsOverview() {
       <DocHeader
         kicker="Qeva documentation"
         title="Everything you need to run the vault"
-        description="Guides for people, operators, and AI agents — built around the same encrypted credential store. Community is individuals-only; org features need Enterprise."
+        description="Guides for people, operators, and AI agents - built around the same encrypted credential store. Community is individuals-only; org features need Enterprise."
         actions={
           <>
             <Link href="/docs/self-hosting" className="btn btn-primary btn-sm">

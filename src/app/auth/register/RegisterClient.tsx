@@ -101,9 +101,11 @@ export default function RegisterClient({ allowCompany }: { allowCompany: boolean
         toast.success(
           data.emailSent
             ? 'Registration successful! Check your email for a verification code.'
-            : 'Registration successful! Check your email for a verification code (or your local OTP setup if email is off).'
+            : 'Registration successful! Enter the setup code from the server logs (QEVA_SETUP_OTP).'
         );
-        router.push(`/auth/verify?email=${encodeURIComponent(form.email)}`);
+        router.push(
+          `/auth/verify?email=${encodeURIComponent(form.email)}${data.emailSent ? '' : '&via=console'}`
+        );
       } else {
         const data = await res.json();
         setError(data.error || 'Registration failed');

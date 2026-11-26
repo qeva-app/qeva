@@ -495,7 +495,7 @@ export default function RBACSettings() {
             <p className="text-xs text-muted-foreground">
               {isSuperAdmin
                 ? 'You can edit these templates as Super Admin.'
-                : 'View only — expand to see permissions, or duplicate as a custom role.'}
+                : 'View only - expand to see permissions, or duplicate as a custom role.'}
             </p>
           </div>
           {builtIn.length > 0 && (

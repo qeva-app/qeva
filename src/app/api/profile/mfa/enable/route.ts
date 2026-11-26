@@ -64,6 +64,6 @@ export async function POST(req: NextRequest) {
     req,
   });
 
-  // Plaintext codes shown once — store them offline
+  // Plaintext codes shown once - store them offline
   return NextResponse.json({ message: 'MFA enabled', backupCodes });
 }

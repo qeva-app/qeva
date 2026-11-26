@@ -1,4 +1,4 @@
-﻿/** Community stub — real Graph client lives in qeva-enterprise overlay. */
+/** Community stub - real Graph client lives in qeva-enterprise overlay. */
 export type GraphUser = {
   id: string;
   displayName?: string | null;

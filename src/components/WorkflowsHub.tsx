@@ -60,7 +60,7 @@ export default function WorkflowsHub() {
     <PageShell className="mx-auto max-w-4xl">
       <PageHeader
         title="Workflows"
-        description="Checklists that get your org ready — onboarding, security hygiene, and admin-defined runs."
+        description="Checklists that get your org ready - onboarding, security hygiene, and admin-defined runs."
       />
 
       <PageBlock>

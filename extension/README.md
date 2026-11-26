@@ -2,7 +2,7 @@
 
 Works in **Chrome**, **Microsoft Edge**, and **Firefox** (same MV3 package; Firefox needs `about:debugging` or AMO).
 
-**Status:** not in public stores yet — use **Load unpacked** / temporary add-on below.  
+**Status:** not in public stores yet - use **Load unpacked** / temporary add-on below.  
 **Publish when ready:** [PUBLICATION.md](./PUBLICATION.md) · [STORE_LISTING.md](./STORE_LISTING.md) · [PENDING.md](../PENDING.md).
 
 ## Local install (dev)
@@ -27,7 +27,7 @@ Browsers do **not** install extensions from a normal `.exe`/`.msi` for consumers
 2. Create a [Chrome Web Store developer account](https://chrome.google.com/webstore/devconsole) (one-time fee).
 3. **New item** → upload `qeva-extension.zip`.
 4. Fill listing (name, screenshots 1280×800, privacy policy URL, single purpose).
-5. Submit for review. After approval, share the store URL — that is the install link.
+5. Submit for review. After approval, share the store URL - that is the install link.
 
 ### B) Microsoft Edge Add-ons (recommended for Edge users)
 
@@ -54,8 +54,8 @@ You still need a published extension ID (store or private self-host update XML).
 
 ### E) Not supported for wide distribution
 
-- Emailing a `.crx` for manual drag-install — Chrome blocks this for security.
-- A custom EXE that “installs” the extension for all users — browsers won’t allow it without policy/store.
+- Emailing a `.crx` for manual drag-install - Chrome blocks this for security.
+- A custom EXE that “installs” the extension for all users - browsers won’t allow it without policy/store.
 
 ## Pack command
 
@@ -63,7 +63,7 @@ You still need a published extension ID (store or private self-host update XML).
 powershell -File extension/pack.ps1
 ```
 
-Creates `extension/dist/qeva-extension.zip` (manifest, scripts, icons only — no README/scripts).
+Creates `extension/dist/qeva-extension.zip` (manifest, scripts, icons only - no README/scripts).
 
 ## Behavior (v1.1)
 

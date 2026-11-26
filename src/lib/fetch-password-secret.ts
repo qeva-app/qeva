@@ -18,7 +18,7 @@ export async function fetchPasswordSecret(id: string): Promise<{
   if (data.encryptionType === 'USER_MASTER') {
     if (data.ciphertext) {
       if (!isClientVaultUnlocked()) {
-        throw new Error('Vault is locked — unlock encryption first');
+        throw new Error('Vault is locked - unlock encryption first');
       }
       const password = await decryptWithClientDek(data.ciphertext);
       let notes: string | null = data.notes ?? null;
@@ -32,12 +32,12 @@ export async function fetchPasswordSecret(id: string): Promise<{
       return { password, notes, locked: false };
     }
     if (data.locked) {
-      throw new Error('Vault is locked — unlock encryption first');
+      throw new Error('Vault is locked - unlock encryption first');
     }
   }
 
   if (data.locked) {
-    throw new Error('Vault is locked — unlock encryption first');
+    throw new Error('Vault is locked - unlock encryption first');
   }
 
   return {

@@ -1,4 +1,4 @@
-/** Built-in profile avatars (self-hosted SVGs) — no uploads / object storage. */
+/** Built-in profile avatars (self-hosted SVGs) - no uploads / object storage. */
 export const AVATAR_PRESETS = [
   { id: '/avatars/human-avery.svg', label: 'Avery', kind: 'human' },
   { id: '/avatars/human-jordan.svg', label: 'Jordan', kind: 'human' },
@@ -29,7 +29,7 @@ export function isAvatarPreset(value: string): value is AvatarPresetId {
   return AVATAR_PRESETS.some((a) => a.id === value);
 }
 
-/** SSO / OAuth profile photos only — never accept arbitrary client URLs. */
+/** SSO / OAuth profile photos only - never accept arbitrary client URLs. */
 export function isRemoteAvatarUrl(value: string) {
   return /^https:\/\//i.test(value);
 }

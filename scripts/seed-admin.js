@@ -20,6 +20,15 @@ function generatePassword() {
 }
 
 async function seedAdmin() {
+  // Backfill: email-verified users from before accountReady existed
+  const backfill = await prisma.user.updateMany({
+    where: { isVerified: true, accountReady: false },
+    data: { accountReady: true },
+  });
+  if (backfill.count > 0) {
+    console.log(`Backfilled accountReady for ${backfill.count} verified user(s)`);
+  }
+
   const email = resolveEmail();
   let password = process.env.BOOTSTRAP_ADMIN_PASSWORD || '';
   const name = process.env.BOOTSTRAP_ADMIN_NAME || 'Admin';
@@ -27,7 +36,7 @@ async function seedAdmin() {
   let generated = false;
 
   if (!email) {
-    console.log('SUPER_ADMIN_EMAIL / BOOTSTRAP_ADMIN_EMAIL not set — skip admin seed');
+    console.log('SUPER_ADMIN_EMAIL / BOOTSTRAP_ADMIN_EMAIL not set - skip admin seed');
     return;
   }
 
@@ -64,6 +73,7 @@ async function seedAdmin() {
       lastName: name.split(' ').slice(1).join(' ') || 'User',
       name,
       isVerified: true,
+      accountReady: true,
       isActive: true,
       mustChangePassword: true,
       mfaPromptPending: true,

@@ -1,6 +1,6 @@
-﻿# CE Docker bring-up (production image). Unsets host DATABASE_URL (localhost leaks break the container).
+# CE Docker bring-up (production image). Unsets host DATABASE_URL (localhost leaks break the container).
 # Usage: powershell -File scripts/docker-up.ps1
-# UI iteration: use npm run dev — do not expect Docker to hot-reload.
+# UI iteration: use npm run dev - do not expect Docker to hot-reload.
 $ErrorActionPreference = 'Stop'
 Set-Location (Split-Path $PSScriptRoot -Parent)
 

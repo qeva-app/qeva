@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
       await sendEmail(
         inbox,
         `[Qeva contact] ${safeSubject}`,
-        `<p><strong>From:</strong> ${name || '—'} &lt;${email}&gt;</p>
+        `<p><strong>From:</strong> ${name || '-'} &lt;${email}&gt;</p>
          <p><strong>Subject:</strong> ${safeSubject}</p>
          <pre style="white-space:pre-wrap;font-family:inherit">${message
            .replace(/&/g, '&amp;')

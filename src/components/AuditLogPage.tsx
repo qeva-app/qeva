@@ -53,17 +53,17 @@ function formatTarget(resource: string | null, rawDetails: string | null) {
   const title = d?.title ?? d?.passwordTitle;
   if (typeof title === 'string' && title.trim()) return title;
   if (Array.isArray(d?.titles) && d.titles.length) {
-    return d.titles.filter((t) => typeof t === 'string').join(', ') || String(d.host || resource || '—');
+    return d.titles.filter((t) => typeof t === 'string').join(', ') || String(d.host || resource || '-');
   }
   if (typeof d?.host === 'string' && d.host) return d.host;
-  return resource || '—';
+  return resource || '-';
 }
 
 function formatDetails(raw: string | null) {
   const parsed = parseDetails(raw);
-  if (!parsed) return raw || '—';
+  if (!parsed) return raw || '-';
   const keys = Object.keys(parsed).filter((k) => !['title', 'passwordTitle', 'id', 'passwordId'].includes(k));
-  if (keys.length === 0) return '—';
+  if (keys.length === 0) return '-';
   const bits = keys.map((k) => `${k}: ${JSON.stringify(parsed[k])}`);
   return bits.join(' · ');
 }
@@ -142,7 +142,7 @@ export default function AuditLogPage() {
     <PageShell>
       <PageHeader
         title="Audit trail"
-        description="Your security-relevant activity on this account — logins, vault changes, tokens, and encryption."
+        description="Your security-relevant activity on this account - logins, vault changes, tokens, and encryption."
         actions={
           <div className="flex flex-wrap gap-2">
             <Button type="button" variant="outline" size="sm" onClick={() => refresh()} disabled={loading}>
@@ -203,7 +203,7 @@ export default function AuditLogPage() {
                     <td className="px-4 py-3 font-medium text-foreground">{formatAction(row.action)}</td>
                     <td className="px-4 py-3 text-foreground">{formatTarget(row.resource, row.details)}</td>
                     <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                      {row.ipAddress || '—'}
+                      {row.ipAddress || '-'}
                     </td>
                     <td
                       className="max-w-[240px] truncate px-4 py-3 font-mono text-xs text-muted-foreground"

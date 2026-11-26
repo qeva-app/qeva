@@ -1,6 +1,6 @@
-﻿'use client';
+'use client';
 
-/** Community stub — real UI in qeva-enterprise overlay. */
+/** Community stub - real UI in qeva-enterprise overlay. */
 export default function SSOConfiguration() {
   return (
     <div className="mx-auto max-w-lg space-y-3 py-16 text-center">

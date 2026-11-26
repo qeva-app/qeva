@@ -49,7 +49,7 @@ export async function GET(
   const teamRole = password.teamId
     ? await getTeamRole(session.user.id, password.teamId)
     : null;
-  // Metadata only — secrets via POST /reveal (or client DEK for USER_MASTER)
+  // Metadata only - secrets via POST /reveal (or client DEK for USER_MASTER)
   const base = toClientPassword(password, ctx, teamRole);
   if (password.encryptionType === 'USER_MASTER') {
     return NextResponse.json({
@@ -136,7 +136,8 @@ export async function PUT(
     existing.encryptionType === 'USER_MASTER' &&
     !existing.isGlobal &&
     !existing.isTeam &&
-    updateData.isGlobal !== true;
+    updateData.isGlobal !== true &&
+    data.clientEncrypted !== false;
 
   if (data.clientEncrypted && keepMaster && data.encryptedPassword) {
     updateData.encryptedPassword = data.encryptedPassword;

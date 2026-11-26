@@ -176,7 +176,7 @@ export default function SettingsPage() {
       if (plain) {
         setCreatedPlainToken(plain);
       } else {
-        toast.error('Token created but the secret was missing — try again');
+        toast.error('Token created but the secret was missing - try again');
       }
     } catch {
       toast.error('Failed to create token');
@@ -192,7 +192,7 @@ export default function SettingsPage() {
       setCopied(true);
       toast.success('Copied');
     } catch {
-      toast.error('Could not copy — select the token and copy manually');
+      toast.error('Could not copy - select the token and copy manually');
     }
   };
 
@@ -305,7 +305,7 @@ export default function SettingsPage() {
           </button>
         </div>
         <p className="mb-4 text-sm text-muted-foreground">
-          Tokens are equal for humans and AI agents — same vault access, labeled for audit.
+          Tokens are equal for humans and AI agents - same vault access, labeled for audit.
           Use Human for the browser extension; Agent for CLI, MCP, or CI.
         </p>
 

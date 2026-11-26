@@ -42,7 +42,7 @@ Master-key KEK: Argon2id (64 MiB, t=3, p=1) → 32-byte key`}
             {[
               {
                 t: 'Master password',
-                b: 'User-provided; unlock/setup/recover stay in the browser — not sent to the server.',
+                b: 'User-provided; unlock/setup/recover stay in the browser - not sent to the server.',
               },
               {
                 t: 'KEK',
@@ -106,7 +106,7 @@ Master-key KEK: Argon2id (64 MiB, t=3, p=1) → 32-byte key`}
         <DocSection id="recovery" title="Recovery file">
           <p>
             Setup generates a recovery file with a backup of the encrypted DEK under a separate recovery key. Store it
-            offline — it is the only way to reset a forgotten master password.
+            offline - it is the only way to reset a forgotten master password.
           </p>
         </DocSection>
       </div>

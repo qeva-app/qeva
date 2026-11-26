@@ -22,7 +22,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Qeva — Enterprise Password Manager',
+  title: 'Qeva - Enterprise Password Manager',
   description: 'Secure enterprise password management with AES-256-GCM vault encryption',
   robots: { index: false, follow: false },
   icons: {

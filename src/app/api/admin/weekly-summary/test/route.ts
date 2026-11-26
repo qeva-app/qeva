@@ -14,7 +14,7 @@ async function handler() {
 
   const analytics = await getWeeklyAnalytics(session.user.id);
   const html = getWeeklyEmailTemplate(session.user.name || 'User', analytics);
-  await sendEmail(session.user.email, 'Qeva — Weekly Summary (Test)', html);
+  await sendEmail(session.user.email, 'Qeva - Weekly Summary (Test)', html);
 
   return NextResponse.json({ message: 'Test email sent' });
 }

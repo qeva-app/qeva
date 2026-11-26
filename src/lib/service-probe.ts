@@ -123,7 +123,7 @@ async function probeHttp(input: ProbeInput): Promise<ProbeResult> {
       redirect: 'manual',
       signal: controller.signal,
     });
-    // Drain a tiny amount then drop — never keep secrets from body
+    // Drain a tiny amount then drop - never keep secrets from body
     const reader = res.body?.getReader();
     if (reader) {
       let read = 0;
@@ -196,7 +196,7 @@ export async function runServiceProbe(input: ProbeInput): Promise<ProbeResult> {
   }
 }
 
-/** Reject executable / archive uploads — profiles must be JSON text only. */
+/** Reject executable / archive uploads - profiles must be JSON text only. */
 export function looksLikeExecutableUpload(
   filename: string | undefined,
   bytes: Uint8Array | Buffer

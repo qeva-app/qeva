@@ -14,6 +14,7 @@ function VerifyContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
+  const viaConsole = searchParams.get('via') === 'console';
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -75,7 +76,12 @@ function VerifyContent() {
         body: JSON.stringify({ email, otp: code }),
       });
       if (res.ok) {
-        toast.success('Email verified! Redirecting...');
+        const data = await res.json().catch(() => ({}));
+        toast.success(
+          data.emailVerified
+            ? 'Email verified! Redirecting...'
+            : 'Account unlocked! Redirecting...'
+        );
         setTimeout(() => router.push('/auth/signin'), 1500);
       } else {
         const data = await res.json();
@@ -98,7 +104,12 @@ function VerifyContent() {
         body: JSON.stringify({ email }),
       });
       if (res.ok) {
-        toast.success('OTP resent');
+        const data = await res.json().catch(() => ({}));
+        toast.success(
+          data.emailSent
+            ? 'OTP resent'
+            : 'New setup code written to server logs (QEVA_SETUP_OTP)'
+        );
         setTimer(CODE_LIFETIME_SECONDS);
       } else {
         toast.error('Failed to resend');
@@ -139,8 +150,19 @@ function VerifyContent() {
 
   return (
     <AuthPage>
-      <AuthHeading icon={MailCheck} title="Verify your email">
-        Enter the 6-digit code sent to <span className="block break-all font-medium text-foreground">{email}</span>
+      <AuthHeading icon={MailCheck} title={viaConsole ? 'Enter setup code' : 'Verify your email'}>
+        {viaConsole ? (
+          <>
+            SMTP is not configured. Enter the 6-digit <span className="font-medium text-foreground">QEVA_SETUP_OTP</span>{' '}
+            from the server logs for{' '}
+            <span className="block break-all font-medium text-foreground">{email}</span>
+          </>
+        ) : (
+          <>
+            Enter the 6-digit code sent to{' '}
+            <span className="block break-all font-medium text-foreground">{email}</span>
+          </>
+        )}
       </AuthHeading>
 
       <div className="mt-8 space-y-5">

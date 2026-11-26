@@ -50,6 +50,6 @@ Put 1280×800 PNGs in `extension/store-assets/`:
 
 ## 6. After publish
 
-- [ ] Update [`PENDING.md`](../PENDING.md) — check off store items, paste URLs
+- [ ] Update [`PENDING.md`](../PENDING.md) - check off store items, paste URLs
 - [ ] Update marketing site CTAs / trust badges with store links
 - [ ] Update [`README.md`](README.md) with install links (replace “load unpacked” as primary for end users)

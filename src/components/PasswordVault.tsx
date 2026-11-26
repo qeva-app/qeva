@@ -366,7 +366,7 @@ export default function PasswordVault() {
         title="Password Vault"
         description={
           tab === 'teams' && !selectedTeam
-            ? `${userTeams.length} teams — pick one to browse shared credentials`
+            ? `${userTeams.length} teams - pick one to browse shared credentials`
             : `${tab === 'teams' ? filteredTeamPasswords.length : filtered.length} credentials`
         }
         actions={
@@ -687,10 +687,10 @@ export default function PasswordVault() {
                   </div>
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
-                      <Users size={12} /> {team.memberCount ?? '—'} members
+                      <Users size={12} /> {team.memberCount ?? '-'} members
                     </span>
                     <span className="flex items-center gap-1">
-                      <Lock size={12} /> {team.passwordCount ?? '—'} passwords
+                      <Lock size={12} /> {team.passwordCount ?? '-'} passwords
                     </span>
                   </div>
                 </button>
@@ -713,7 +713,7 @@ export default function PasswordVault() {
           emptyDescription={
             search || favoritesOnly || expiringOnly || category !== 'all'
               ? 'Try clearing filters or search.'
-              : 'Add your first credential — generate a strong password in one step.'
+              : 'Add your first credential - generate a strong password in one step.'
           }
         />
       )}

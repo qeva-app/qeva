@@ -1,6 +1,6 @@
 import { ROLE_PERMISSIONS } from '@/lib/permissions';
 
-/** Built-in role names — reserved; orgs cannot create/rename into these. */
+/** Built-in role names - reserved; orgs cannot create/rename into these. */
 export const SYSTEM_ROLE_NAMES = ['ADMIN', 'MANAGER', 'USER'] as const;
 
 export type SystemRoleName = (typeof SYSTEM_ROLE_NAMES)[number];

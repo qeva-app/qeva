@@ -9,7 +9,7 @@ export const AES_TAG_BYTES = 16;
 export const DEK_BYTES = 32;
 export const SALT_BYTES = 32;
 
-/** Argon2id KEK derivation — memoryCost is KiB (65536 = 64 MiB). */
+/** Argon2id KEK derivation - memoryCost is KiB (65536 = 64 MiB). */
 export const ARGON2ID = {
   type: 'argon2id' as const,
   memoryCost: 65536,

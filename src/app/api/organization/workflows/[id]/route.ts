@@ -143,7 +143,7 @@ export async function DELETE(req: NextRequest, { params }: Ctx) {
 
   if (existing.slug === 'general-onboarding') {
     return NextResponse.json(
-      { error: 'Cannot delete General Onboarding — disable it instead' },
+      { error: 'Cannot delete General Onboarding - disable it instead' },
       { status: 400 }
     );
   }

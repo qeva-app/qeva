@@ -23,13 +23,13 @@ function enterpriseUnavailable(extra: Record<string, unknown> = {}) {
   );
 }
 
-/** API guard — Community builds get 404 (feature absent), not a tease. */
+/** API guard - Community builds get 404 (feature absent), not a tease. */
 export function requireEnterpriseFeature(feature: EnterpriseFeature): NextResponse | null {
   if (hasEnterpriseFeature(feature)) return null;
   return enterpriseUnavailable({ feature });
 }
 
-/** Company / org surfaces — absent on Community (individuals only). */
+/** Company / org surfaces - absent on Community (individuals only). */
 export function requireCompanyAccounts(): NextResponse | null {
   if (allowsCompanyAccounts()) return null;
   return enterpriseUnavailable({ feature: 'company_accounts' });

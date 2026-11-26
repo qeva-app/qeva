@@ -1,6 +1,6 @@
 /**
  * Open-core edition: Community (public) vs Enterprise (private package / paid).
- * See docs/open-core.md. License flags alone do not hide source — keep paid code out of the public tree.
+ * See docs/open-core.md. License flags alone do not hide source - keep paid code out of the public tree.
  */
 
 export type QevaEdition = 'community' | 'enterprise';
@@ -31,7 +31,7 @@ let cached: EditionInfo | null = null;
 function tryLoadEnterprisePackage(): EnterprisePackage | null {
   if (typeof window !== 'undefined') return null;
   try {
-    // Optional private dependency — absent in Community / public GitHub builds.
+    // Optional private dependency - absent in Community / public GitHub builds.
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     return require('@qeva/enterprise') as EnterprisePackage;
   } catch {
@@ -65,7 +65,7 @@ export function getEditionInfo(): EditionInfo {
   return cached;
 }
 
-/** Test helper — clears memoization after env changes in selfchecks. */
+/** Test helper - clears memoization after env changes in selfchecks. */
 export function resetEditionCache(): void {
   cached = null;
 }

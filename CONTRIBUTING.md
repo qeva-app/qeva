@@ -4,11 +4,11 @@ Thanks for helping. This repo is the **public Community** edition. Enterprise co
 
 ## Ground rules
 
-1. **No secrets** — never commit `.env`, keys, tokens, or real credentials. Use `.env.example` placeholders only.
-2. **No Enterprise source** — SSO/SCIM/SIEM/directory-sync/alerts implementations belong in the private `qeva-enterprise` overlay, not this tree.
-3. **Small PRs** — one problem per PR; keep diffs reviewable.
-4. **Honest docs** — don’t claim Community has company/org features.
-5. **Tests** — new non-trivial logic should leave a selfcheck assert or small script under `scripts/`.
+1. **No secrets** - never commit `.env`, keys, tokens, or real credentials. Use `.env.example` placeholders only.
+2. **No Enterprise source** - SSO/SCIM/SIEM/directory-sync/alerts implementations belong in the private `qeva-enterprise` overlay, not this tree.
+3. **Small PRs** - one problem per PR; keep diffs reviewable.
+4. **Honest docs** - don’t claim Community has company/org features.
+5. **Tests** - new non-trivial logic should leave a selfcheck assert or small script under `scripts/`.
 
 ## Branching
 

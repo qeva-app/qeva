@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     where.OR = [{ name: { contains: search } }, { email: { contains: search } }];
   }
 
-  // Scope to user's organization — only show users from the same org
+  // Scope to user's organization - only show users from the same org
   const currentUser = await prisma.user.findUnique({
     where: { id: session.user.id },
     select: { organizationId: true },
