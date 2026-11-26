@@ -16,7 +16,7 @@ This repository is the **Community (open-core)** edition: personal vault only. C
 | Agents / scripts | Access tokens + `/api/v1` (CLI/MCP helpers under `agents/`) |
 | Know who did what | Personal audit trail (export CSV, purge with confirmation) |
 
-**Not in Community:** company signup, teams/RBAC, SSO, SCIM, directory sync, SIEM, Slack/Teams alerts. Those need [Enterprise](https://github.com/qeva-app/qeva-enterprise) (private).
+**Not in Community:** company signup, teams/RBAC, SSO, SCIM, directory sync, SIEM, Slack/Teams alerts. Those need **Qeva Enterprise** (private / managed).
 
 Editions & boundaries: [`docs/open-core.md`](docs/open-core.md)
 
@@ -96,14 +96,7 @@ Checks: `npm run selfcheck`
 
 ## Enterprise
 
-Private overlay: [qeva-enterprise](https://github.com/qeva-app/qeva-enterprise) (not included in this repo).
-
-```bash
-# from the private repo, onto a Community checkout:
-node scripts/apply-overlay.js --target /path/to/qeva
-```
-
-Public Community images have no EE package. Env alone does not add Enterprise source.
+Enterprise source is **private** (overlay + managed hosting) and is not part of this repository. Public Community images have no EE package — flipping an env var alone does not unlock Enterprise.
 
 ---
 

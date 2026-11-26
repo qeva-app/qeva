@@ -4,21 +4,16 @@ One product. Two editions. **Enterprise source must not ship on the public GitHu
 
 ## Repositories
 
-| Repo | Visibility | URL |
-|------|------------|-----|
-| **qeva** (this repo) | Public (Community) | https://github.com/qeva-app/qeva.git |
-| **qeva-enterprise** | Private (EE overlay) | https://github.com/qeva-app/qeva-enterprise.git |
+| Edition | Visibility | What’s public |
+|---------|------------|---------------|
+| **Community** (this repo) | Public | Individual vault, Docker image, stubs for EE paths |
+| **Enterprise** | Private / managed | Company accounts, SSO, SCIM, directory sync, SIEM, alerts |
 
-Community ships stubs for SSO, SCIM, directory sync, SIEM, alerts, and company/org admin APIs. Real implementations live only in the private overlay and are applied onto a Community tree for Enterprise / managed builds.
-
-```bash
-# From the private repo (not in this tree):
-node scripts/apply-overlay.js --target /path/to/qeva
-```
+Community ships stubs for SSO, SCIM, directory sync, SIEM, alerts, and company/org admin APIs. Real implementations are applied only in private Enterprise builds.
 
 ## Editions
 
-| | Community (public Docker) | Enterprise (private overlay + managed) |
+| | Community (public Docker) | Enterprise (private / managed) |
 |--|--------------------|----------------------------------------|
 | Individual vault + MFA | Yes | Yes |
 | Company / organization accounts | No | Yes |
@@ -39,7 +34,7 @@ node scripts/apply-overlay.js --target /path/to/qeva
 2. Else: if `@qeva/enterprise` resolves → `enterprise`.
 3. Else → `community`.
 
-Public Community images have **no** `@qeva/enterprise` package. Leave env unset or `community`. Flipping the env alone does not add Enterprise source — the overlay must be present.
+Public Community images have **no** Enterprise package. Leave env unset or `community`. Flipping the env alone does not add Enterprise source.
 
 ## Check
 

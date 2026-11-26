@@ -65,30 +65,25 @@ export default function OpenCoreDocsPage() {
           </Callout>
         </DocSection>
 
-        <DocSection id="repos" title="Repositories">
+        <DocSection id="repos" title="What’s public">
           <DocTable
-            headers={['Repo', 'Visibility', 'Role']}
+            headers={['Edition', 'Visibility', 'Role']}
             rows={[
               [
-                <InlineCode key="q">qeva</InlineCode>,
-                'Public',
-                'Community tree + Docker image',
+                <InlineCode key="q">Community</InlineCode>,
+                'Public (this repo)',
+                'Individual vault + Docker image; EE paths are stubs',
               ],
               [
-                <InlineCode key="e">qeva-enterprise</InlineCode>,
-                'Private',
-                'EE overlay applied onto Community',
+                <InlineCode key="e">Enterprise</InlineCode>,
+                'Private / managed',
+                'Company accounts and org integrations — not in this repository',
               ],
             ]}
           />
-          <p className="mt-4">
-            Enterprise builds apply the private overlay onto this Community tree (script lives in{' '}
-            <InlineCode>qeva-enterprise</InlineCode>, not this repo):
-          </p>
-          <CodeBlock
-            language="bash"
-            code="node ../qeva-enterprise/scripts/apply-overlay.js --target ."
-          />
+          <Callout variant="info" title="No public Enterprise source">
+            Enterprise code is not published on GitHub. Contact Qeva for Enterprise or managed hosting.
+          </Callout>
         </DocSection>
 
         <DocSection id="check" title="Verify Community build">
