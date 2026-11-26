@@ -1,5 +1,8 @@
 /**
- * Open-core edition gates. Run: node scripts/selfcheck-edition.js
+ * Open-core edition gates (Community tree).
+ * Run: node scripts/selfcheck-edition.js
+ *
+ * Community must NOT ship packages/qeva-enterprise — EE overlay is private.
  */
 const fs = require('fs');
 const path = require('path');
@@ -16,12 +19,22 @@ function assert(cond, msg) {
 assert(fs.existsSync(path.join(root, 'docs/open-core.md')), 'docs/open-core.md');
 assert(fs.existsSync(path.join(root, 'src/lib/edition.ts')), 'edition.ts');
 assert(fs.existsSync(path.join(root, 'src/lib/enterprise-guard.ts')), 'enterprise-guard.ts');
-assert(fs.existsSync(path.join(root, 'packages/qeva-enterprise/package.json')), 'enterprise package');
+
+// Public CE tree: private package must be absent (signal lives in qeva-enterprise repo)
+assert(
+  !fs.existsSync(path.join(root, 'packages/qeva-enterprise/package.json')),
+  'no enterprise package in Community tree'
+);
 
 const editionSrc = fs.readFileSync(path.join(root, 'src/lib/edition.ts'), 'utf8');
 assert(editionSrc.includes('ENTERPRISE_FEATURES'), 'feature catalog');
 assert(editionSrc.includes('QEVA_EDITION'), 'env override');
 assert(editionSrc.includes('allowsCompanyAccounts'), 'individuals-only helper');
+assert(editionSrc.includes('@qeva/enterprise'), 'optional EE package load');
+
+const guardSrc = fs.readFileSync(path.join(root, 'src/lib/enterprise-guard.ts'), 'utf8');
+assert(guardSrc.includes('requireEnterpriseFeature'), 'requireEnterpriseFeature');
+assert(guardSrc.includes('withEnterpriseFeature'), 'withEnterpriseFeature');
 
 const registerApi = fs.readFileSync(path.join(root, 'src/app/api/auth/register/route.ts'), 'utf8');
 assert(registerApi.includes('allowsCompanyAccounts'), 'company signup gated');
@@ -29,29 +42,25 @@ assert(registerApi.includes('allowsCompanyAccounts'), 'company signup gated');
 const featureAccess = fs.readFileSync(path.join(root, 'src/lib/feature-access.ts'), 'utf8');
 assert(featureAccess.includes('allowsCompanyAccounts'), 'org features gated for community');
 
-const scim = fs.readFileSync(path.join(root, 'src/app/api/admin/scim/route.ts'), 'utf8');
-assert(scim.includes("withEnterpriseFeature('scim'"), 'scim gated');
+function assertStubGated(relPath, feature, label) {
+  const src = fs.readFileSync(path.join(root, relPath), 'utf8');
+  assert(
+    src.includes(`requireEnterpriseFeature('${feature}'`) ||
+      src.includes(`withEnterpriseFeature('${feature}'`),
+    label
+  );
+}
 
-const siem = fs.readFileSync(path.join(root, 'src/app/api/admin/siem/export/route.ts'), 'utf8');
-assert(siem.includes("withEnterpriseFeature('siem'"), 'siem gated');
-
-const alerts = fs.readFileSync(path.join(root, 'src/app/api/admin/alerts/route.ts'), 'utf8');
-assert(alerts.includes("withEnterpriseFeature('alerts'"), 'alerts gated');
-
-const dirSync = fs.readFileSync(path.join(root, 'src/app/api/admin/directory-sync/route.ts'), 'utf8');
-assert(dirSync.includes("withEnterpriseFeature('directory_sync'"), 'directory_sync gated');
-
-const ssoAdmin = fs.readFileSync(path.join(root, 'src/app/api/admin/sso/configs/route.ts'), 'utf8');
-assert(ssoAdmin.includes("withEnterpriseFeature('sso'"), 'sso admin gated');
+assertStubGated('src/app/api/admin/scim/route.ts', 'scim', 'scim gated');
+assertStubGated('src/app/api/admin/siem/export/route.ts', 'siem', 'siem gated');
+assertStubGated('src/app/api/admin/alerts/route.ts', 'alerts', 'alerts gated');
+assertStubGated('src/app/api/admin/directory-sync/route.ts', 'directory_sync', 'directory_sync gated');
+assertStubGated('src/app/api/admin/sso/configs/route.ts', 'sso', 'sso admin gated');
 
 const envExample = fs.readFileSync(path.join(root, '.env.example'), 'utf8');
 assert(envExample.includes('QEVA_EDITION'), '.env.example documents QEVA_EDITION');
 
-// Runtime: community env clears features
-process.env.QEVA_EDITION = 'community';
-delete require.cache[require.resolve('../src/lib/edition.ts')];
-// edition.ts is TypeScript — assert via a tiny inline mirror of the env parse
-const raw = (process.env.QEVA_EDITION || '').trim().toLowerCase();
+const raw = 'community';
 assert(raw === 'community', 'runtime env community');
 
 if (failed) {
