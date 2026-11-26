@@ -82,12 +82,12 @@ export default function OpenCoreDocsPage() {
             ]}
           />
           <p className="mt-4">
-            Contributors: sync with <InlineCode>scripts/sync-open-core-repos.ps1</InlineCode>, then apply the overlay:
+            Enterprise builds apply the private overlay onto this Community tree (script lives in{' '}
+            <InlineCode>qeva-enterprise</InlineCode>, not this repo):
           </p>
           <CodeBlock
             language="bash"
-            code="node ../qeva-enterprise/scripts/apply-overlay.js --target .
-# set QEVA_EDITION=enterprise"
+            code="node ../qeva-enterprise/scripts/apply-overlay.js --target ."
           />
         </DocSection>
 

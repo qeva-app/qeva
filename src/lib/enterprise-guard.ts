@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   hasEnterpriseFeature,
+  allowsCompanyAccounts,
   type EnterpriseFeature,
   getEdition,
 } from '@/lib/edition';
@@ -10,18 +11,28 @@ type ApiHandler = (
   context?: unknown
 ) => Promise<NextResponse>;
 
-/** API guard — Community builds get 404 (feature absent), not a tease. */
-export function requireEnterpriseFeature(feature: EnterpriseFeature): NextResponse | null {
-  if (hasEnterpriseFeature(feature)) return null;
+function enterpriseUnavailable(extra: Record<string, unknown> = {}) {
   return NextResponse.json(
     {
       error: 'This feature requires Qeva Enterprise',
-      feature,
       edition: getEdition(),
       docs: 'https://qeva.in',
+      ...extra,
     },
     { status: 404 }
   );
+}
+
+/** API guard — Community builds get 404 (feature absent), not a tease. */
+export function requireEnterpriseFeature(feature: EnterpriseFeature): NextResponse | null {
+  if (hasEnterpriseFeature(feature)) return null;
+  return enterpriseUnavailable({ feature });
+}
+
+/** Company / org surfaces — absent on Community (individuals only). */
+export function requireCompanyAccounts(): NextResponse | null {
+  if (allowsCompanyAccounts()) return null;
+  return enterpriseUnavailable({ feature: 'company_accounts' });
 }
 
 /** Wrap a route handler so Community editions never reach the body. */

@@ -41,6 +41,10 @@ assert(registerApi.includes('allowsCompanyAccounts'), 'company signup gated');
 
 const featureAccess = fs.readFileSync(path.join(root, 'src/lib/feature-access.ts'), 'utf8');
 assert(featureAccess.includes('allowsCompanyAccounts'), 'org features gated for community');
+assert(
+  /canAccessSecurityScan:\s*true/.test(featureAccess),
+  'personal security scan enabled for Community'
+);
 
 function assertStubGated(relPath, feature, label) {
   const src = fs.readFileSync(path.join(root, relPath), 'utf8');
@@ -56,6 +60,27 @@ assertStubGated('src/app/api/admin/siem/export/route.ts', 'siem', 'siem gated');
 assertStubGated('src/app/api/admin/alerts/route.ts', 'alerts', 'alerts gated');
 assertStubGated('src/app/api/admin/directory-sync/route.ts', 'directory_sync', 'directory_sync gated');
 assertStubGated('src/app/api/admin/sso/configs/route.ts', 'sso', 'sso admin gated');
+
+const companyGuard = fs.readFileSync(path.join(root, 'src/lib/enterprise-guard.ts'), 'utf8');
+assert(companyGuard.includes('requireCompanyAccounts'), 'requireCompanyAccounts helper');
+
+for (const rel of [
+  'src/app/api/enterprise/organizations/route.ts',
+  'src/app/api/enterprise/metrics/route.ts',
+  'src/app/api/admin/organizations/route.ts',
+  'src/app/api/admin/organizations/[id]/route.ts',
+]) {
+  const src = fs.readFileSync(path.join(root, rel), 'utf8');
+  assert(src.includes('requireCompanyAccounts'), `${rel} company-gated`);
+}
+
+const enterpriseUi = fs.readFileSync(path.join(root, 'src/components/EnterpriseManagement.tsx'), 'utf8');
+assert(enterpriseUi.includes('Enterprise only') || enterpriseUi.includes('Community stub'), 'enterprise UI stubbed');
+
+assert(
+  !fs.existsSync(path.join(root, 'scripts/sync-open-core-repos.ps1')),
+  'no hard-coded sync-open-core script'
+);
 
 const envExample = fs.readFileSync(path.join(root, '.env.example'), 'utf8');
 assert(envExample.includes('QEVA_EDITION'), '.env.example documents QEVA_EDITION');

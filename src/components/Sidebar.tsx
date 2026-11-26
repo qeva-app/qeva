@@ -81,7 +81,7 @@ const navSections: NavSection[] = [
       },
       { label: 'Teams', href: '/teams', icon: <Users size={20} />, orgOnly: true, requires: 'canAccessTeams' },
       { label: 'Services', href: '/services', icon: <Server size={20} />, orgOnly: true, requires: 'canAccessServices' },
-      { label: 'Security Scan', href: '/security', icon: <Shield size={20} />, orgOnly: true, requires: 'canAccessSecurityScan' },
+      { label: 'Security Scan', href: '/security', icon: <Shield size={20} />, requires: 'canAccessSecurityScan' },
     ],
   },
   {

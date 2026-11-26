@@ -96,14 +96,14 @@ Checks: `npm run selfcheck`
 
 ## Enterprise
 
-Private overlay: [qeva-enterprise](https://github.com/qeva-app/qeva-enterprise)
+Private overlay: [qeva-enterprise](https://github.com/qeva-app/qeva-enterprise) (not included in this repo).
 
 ```bash
-# sibling clone, then:
-node ../qeva-enterprise/scripts/apply-overlay.js --target .
+# from the private repo, onto a Community checkout:
+node scripts/apply-overlay.js --target /path/to/qeva
 ```
 
-Edition is detected from the Enterprise package when present. Public Community images stay individual-only without that overlay.
+Public Community images have no EE package. Env alone does not add Enterprise source.
 
 ---
 

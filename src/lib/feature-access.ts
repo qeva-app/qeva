@@ -111,7 +111,7 @@ export function getUserFeatureAccess(user: UserForAccess): FeatureAccess {
       canAccessRBAC: false,
       canAccessAnalytics: false,
       canAccessDatabase: false,
-      canAccessSecurityScan: false,
+      canAccessSecurityScan: true,
       canAccessDirectorySync: false,
       canAccessSiem: false,
       canAccessAlerts: false,

@@ -1,25 +1,24 @@
 # Qeva open-core
 
-One codebase. Two editions. Enterprise source must not ship on the public GitHub tree.
+One product. Two editions. **Enterprise source must not ship on the public GitHub tree.**
 
 ## Repositories
 
 | Repo | Visibility | URL |
 |------|------------|-----|
-| **qeva** | Public (Community) | https://github.com/qeva-app/qeva.git |
+| **qeva** (this repo) | Public (Community) | https://github.com/qeva-app/qeva.git |
 | **qeva-enterprise** | Private (EE overlay) | https://github.com/qeva-app/qeva-enterprise.git |
 
-Clone Community and the private overlay as sibling directories, then sync with:
+Community ships stubs for SSO, SCIM, directory sync, SIEM, alerts, and company/org admin APIs. Real implementations live only in the private overlay and are applied onto a Community tree for Enterprise / managed builds.
 
-```powershell
-powershell -File scripts/sync-open-core-repos.ps1
+```bash
+# From the private repo (not in this tree):
+node scripts/apply-overlay.js --target /path/to/qeva
 ```
-
-That refreshes Community (stubs for EE paths) and copies real EE files into `qeva-enterprise/overlay/`. EE/managed builds run `node qeva-enterprise/scripts/apply-overlay.js` onto a Community tree, then set `QEVA_EDITION=enterprise`.
 
 ## Editions
 
-| | Community (public Docker) | Enterprise (private package + managed) |
+| | Community (public Docker) | Enterprise (private overlay + managed) |
 |--|--------------------|----------------------------------------|
 | Individual vault + MFA | Yes | Yes |
 | Company / organization accounts | No | Yes |
@@ -40,14 +39,7 @@ That refreshes Community (stubs for EE paths) and copies real EE files into `qev
 2. Else: if `@qeva/enterprise` resolves → `enterprise`.
 3. Else → `community`.
 
-Local monorepo default: leave unset or set `enterprise` so nothing breaks while developing.
-
-Community Docker / public image: set `QEVA_EDITION=community`.
-
-## Private package
-
-- Path today: [`packages/qeva-enterprise`](../packages/qeva-enterprise/) (signal package; implementations still live under `src/` until extraction).
-- Before first public GitHub push: move SSO/SCIM/directory-sync/SIEM/alerts code into that package (or a private repo), wire the public app through [`src/lib/edition.ts`](../src/lib/edition.ts) stubs only, and **do not publish** `packages/qeva-enterprise`.
+Public Community images have **no** `@qeva/enterprise` package. Leave env unset or `community`. Flipping the env alone does not add Enterprise source — the overlay must be present.
 
 ## Check
 

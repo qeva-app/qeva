@@ -61,10 +61,12 @@ Supabase tip: prefer the direct connection for migrations/`db push`, or the pool
 | `SUPER_ADMIN_EMAIL` | yes (CE bootstrap) | Platform super-admin + first admin seed |
 | `DB_PASSWORD` | bundled only | Postgres password for the sidecar |
 | `QEVA_DATABASE_URL` | external only | Postgres/Supabase URL |
-| `QEVA_EDITION` | no | Defaults to `community` (individuals only); `enterprise` unlocks company accounts |
+| `QEVA_EDITION` | no | Optional; Community images stay individual-only without the private EE overlay |
 | `BOOTSTRAP_ADMIN_PASSWORD` | no | Skip auto-generate; set your own (≥10 chars) |
 
 Full template: [`.env.example`](../.env.example).
+
+**Production:** never set `ALLOW_DEV_OTP=true`. That bypass is for emergency/local UAT only when SMTP is unavailable.
 
 ## Browser extension
 
