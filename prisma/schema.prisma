@@ -1,0 +1,829 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Core Models ───────────────────────────────────────────
+
+model User {
+  id           String  @id @default(cuid())
+  name         String?
+  firstName    String?
+  lastName     String?
+  email        String  @unique
+  username     String  @unique
+  password     String?
+  passwordHash String?
+  image        String?
+
+  // Status
+  isActive            Boolean @default(true)
+  /// True only after an OTP that was actually emailed (SMTP), or invite link from email
+  isVerified          Boolean @default(false)
+  /// Sign-in allowed after email verify, console setup OTP, invite activate, or bootstrap seed
+  accountReady        Boolean @default(false)
+  /// True for bootstrap / invited accounts until they set their own password
+  mustChangePassword  Boolean @default(false)
+  /// Prompt MFA setup once after signup / first password (skippable)
+  mfaPromptPending    Boolean @default(false)
+  accountType         String  @default("INDIVIDUAL") // INDIVIDUAL or ORGANIZATION
+  ssoProvider         String?
+  ssoId               String?
+
+  // Profile
+  department    String?
+  position      String?
+  jobTitle      String?
+  phone         String?
+  location      String?
+  managerId     String?
+  manager       User?   @relation("UserManager", fields: [managerId], references: [id], onDelete: SetNull)
+  directReports User[]  @relation("UserManager")
+
+  // OTP
+  otp       String?
+  otpExpiry DateTime?
+
+  // Security
+  twoFactorEnabled     Boolean @default(false)
+  /// AES-GCM blob of the TOTP shared secret (never store plaintext)
+  twoFactorSecret      String? @db.Text
+  /// JSON array of bcrypt hashes for one-time MFA backup codes
+  twoFactorBackupCodes String? @db.Text
+  emailNotifications   Boolean @default(true)
+  securityAlerts       Boolean @default(true)
+  sessionTimeout       Int     @default(86400) // 24 hours in seconds
+  passwordExpiry       Int     @default(90) // days
+
+  // Encryption
+  encryptionEnabled  Boolean   @default(false)
+  masterPasswordHash String? // Argon2
+  encryptedDEK       String?   @db.Text
+  dekHash            String? // SHA256
+  salt               String?
+  encryptionSetupAt  DateTime?
+  lastUnlockAt       DateTime?
+
+  // Organization
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  accounts                Account[]
+  sessions                Session[]
+  passwords               PasswordEntry[]
+  passwordHistory         PasswordHistory[]
+  teams                   Team[]               @relation("TeamCreator")
+  teamMemberships         TeamMembership[]
+  auditLogs               AuditLog[]
+  accessTokens            AccessToken[]
+  userRoles               UserRoleAssignment[]
+  permissions             UserPermission[]
+  feedbacks               Feedback[]
+  userSessions            UserSession[]
+  databaseConnections     DatabaseConnection[]
+  ssoConfigs              SSOConfiguration[]   @relation("SSOCreator")
+  reports                 Report[]
+  securityScans           SecurityScan[]
+  sharedLinks             SharedLink[]
+  emergencyGrantor        EmergencyAccess[]    @relation("EmergencyGrantor")
+  emergencyGrantee        EmergencyAccess[]    @relation("EmergencyGrantee")
+  workflowProgress        WorkflowProgress[]
+  workflowAssignments     WorkflowAssignment[] @relation("WorkflowAssignee")
+  workflowAssignmentsMade WorkflowAssignment[] @relation("WorkflowAssigner")
+}
+
+model PasswordEntry {
+  id                String    @id @default(cuid())
+  title             String
+  username          String?
+  encryptedPassword String    @db.Text
+  website           String?
+  category          String?
+  notes             String?   @db.Text
+  tags              String?
+  expiryDate        DateTime?
+  strength          Int       @default(0) // 0-100
+  lastUsed          DateTime?
+  isFavorite        Boolean   @default(false)
+
+  // Visibility
+  isGlobal Boolean @default(false)
+  isTeam   Boolean @default(false)
+  teamId   String?
+  team     Team?   @relation(fields: [teamId], references: [id], onDelete: SetNull)
+
+  // Encryption
+  encryptionType String @default("PUBLIC_KEY") // PUBLIC_KEY or USER_MASTER
+
+  // Customization
+  icon  String?
+  color String? // hex
+  label String?
+
+  // Relations
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceId   String?
+  service     Service?          @relation(fields: [serviceId], references: [id])
+  history     PasswordHistory[]
+  sharedLinks SharedLink[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([teamId])
+  @@index([category])
+  @@index([createdAt])
+  @@index([userId, category])
+}
+
+model PasswordHistory {
+  id                String        @id @default(cuid())
+  passwordEntryId   String
+  passwordEntry     PasswordEntry @relation(fields: [passwordEntryId], references: [id], onDelete: Cascade)
+  encryptedPassword String        @db.Text
+  encryptionType    String        @default("PUBLIC_KEY")
+  strength          Int           @default(0)
+  changedBy         String?
+  changedByUser     User?         @relation(fields: [changedBy], references: [id], onDelete: SetNull)
+  changedAt         DateTime      @default(now())
+
+  @@index([passwordEntryId])
+  @@index([changedAt])
+}
+
+// ─── RBAC Models ───────────────────────────────────────────
+
+model Role {
+  id             String        @id @default(cuid())
+  name           String
+  description    String?
+  permissions    String?       @db.Text // JSON string
+  isSystem       Boolean       @default(false)
+  isActive       Boolean       @default(true)
+  /// null = platform built-in; set = org-owned custom role
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  userRoles UserRoleAssignment[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  resource    String?
+  action      String?
+  scope       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userPermissions UserPermission[]
+}
+
+model UserRoleAssignment {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  roleId     String
+  role       Role      @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  assignedBy String?
+  expiresAt  DateTime?
+  isPrimary  Boolean   @default(false)
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([userId, roleId])
+  @@index([userId, isPrimary])
+}
+
+model UserPermission {
+  id           String     @id @default(cuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  granted      Boolean    @default(true)
+  grantedBy    String?
+  expiresAt    DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([userId, permissionId])
+}
+
+// ─── Team Models ───────────────────────────────────────────
+
+model Organization {
+  id             String    @id @default(cuid())
+  name           String    @unique
+  domain         String?
+  description    String?
+  logo           String? // URL to uploaded org logo
+  isActive       Boolean   @default(true)
+  status         String    @default("PENDING") // PENDING, ACTIVE, TRIAL, GRACE, EXPIRED
+  contactEmail   String? // person who requested the org
+  trialStartDate DateTime?
+  trialDays      Int       @default(14)
+  approvedBy     String? // Qeva admin user ID
+  approvedAt     DateTime?
+  ssoConfigId    String?
+  /// JSON PasswordPolicy — minLength, required classes, rotationDays, etc.
+  passwordPolicy String?   @db.Text
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  users                User[]
+  teams                Team[]
+  workflows            Workflow[]
+  roles                Role[]
+  directorySync        DirectorySyncConfig?
+  scimCredential       ScimCredential?
+  webhookSubscriptions WebhookSubscription[]
+  alertChannels        AlertChannel[]
+}
+
+/// Microsoft Graph (Entra) directory sync — org-scoped credentials + field mapping
+model DirectorySyncConfig {
+  id                 String       @id @default(cuid())
+  organizationId     String       @unique
+  organization       Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  provider           String       @default("MICROSOFT_GRAPH")
+  tenantId           String
+  clientId           String
+  /// AES-GCM encrypted client secret (ENCRYPTION_KEY)
+  clientSecretEnc    String       @db.Text
+  /// JSON: which Qeva fields to fill from Graph properties
+  fieldMapping       String?      @db.Text
+  syncManagers       Boolean      @default(true)
+  /// If true, create inactive stub users for Graph accounts not yet in Qeva
+  createMissingUsers Boolean      @default(false)
+  /// Deactivate org users who are disabled in Graph or missing from the Graph directory
+  deactivateMissing  Boolean      @default(false)
+  /// Map Entra group membership → Qeva teams (same display name)
+  syncGroups         Boolean      @default(false)
+  isActive           Boolean      @default(true)
+  lastSyncAt         DateTime?
+  lastSyncStatus     String? // ok | error | partial
+  lastSyncSummary    String?      @db.Text
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  @@index([organizationId])
+}
+
+/// Outbound HTTPS webhooks (HMAC-SHA256 signed)
+model WebhookSubscription {
+  id             String        @id @default(cuid())
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String?
+  url            String
+  secret         String
+  /// JSON array of event types
+  events         String        @db.Text
+  active         Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([organizationId])
+  @@index([userId])
+}
+
+/// Slack / Teams incoming webhook URLs (same domain events as WebhookSubscription)
+model AlertChannel {
+  id             String        @id @default(cuid())
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String?
+  /// SLACK | TEAMS
+  type           String
+  name           String
+  webhookUrl     String        @db.Text
+  /// JSON array of event types
+  events         String        @db.Text
+  active         Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([organizationId])
+}
+
+/// Bearer token for SCIM 2.0 provisioning (Okta / Azure SCIM Bridge)
+model ScimCredential {
+  id             String       @id @default(cuid())
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  /// SHA-256 hex of the bearer token (plaintext shown once on create)
+  tokenHash      String
+  name           String       @default("SCIM")
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId])
+  @@index([tokenHash])
+}
+
+model Team {
+  id             String        @id @default(cuid())
+  name           String
+  description    String?
+  isActive       Boolean       @default(true)
+  isPrivate      Boolean       @default(false)
+  icon           String?
+  color          String?
+  label          String?
+  createdBy      String?
+  creator        User?         @relation("TeamCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  memberships TeamMembership[]
+  passwords   PasswordEntry[]
+}
+
+model TeamMembership {
+  id        String   @id @default(cuid())
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Restrict)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  role      String   @default("MEMBER") // OWNER, ADMIN, MEMBER, VIEWER
+  invitedBy String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([teamId, userId])
+}
+
+// ─── Security & Audit Models ──────────────────────────────
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  resource  String?
+  details   String?  @db.Text
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@index([userId, createdAt])
+  @@index([userId, action])
+}
+
+model UserSession {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  loginAt     DateTime  @default(now())
+  logoutAt    DateTime?
+  duration    Int? // seconds
+  ipAddress   String?
+  userAgent   String?
+  deviceType  String?
+  browser     String?
+  os          String?
+  location    String?
+  isActive    Boolean   @default(true)
+  sessionType String    @default("web") // web, mobile, api
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// ─── Infrastructure Models ─────────────────────────────────
+
+model BackupConfig {
+  id               String   @id @default(cuid())
+  name             String
+  description      String?
+  schedule         String? // cron expression
+  retentionDays    Int      @default(30)
+  enabled          Boolean  @default(true)
+  includePasswords Boolean  @default(true)
+  includeUsers     Boolean  @default(true)
+  includeAuditLogs Boolean  @default(true)
+  includeSettings  Boolean  @default(true)
+  compression      Boolean  @default(true)
+  encryption       Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  jobs BackupJob[]
+}
+
+model BackupJob {
+  id          String       @id @default(cuid())
+  configId    String
+  config      BackupConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+  status      String       @default("pending") // pending, running, completed, failed
+  startedAt   DateTime?
+  completedAt DateTime?
+  size        BigInt?
+  location    String?
+  checksum    String?
+  error       String?      @db.Text
+  createdAt   DateTime     @default(now())
+
+  restores BackupRestore[]
+}
+
+model BackupRestore {
+  id             String    @id @default(cuid())
+  backupId       String
+  backup         BackupJob @relation(fields: [backupId], references: [id], onDelete: Cascade)
+  status         String    @default("pending")
+  startedAt      DateTime?
+  completedAt    DateTime?
+  restoredTables String?
+  error          String?   @db.Text
+  createdAt      DateTime  @default(now())
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String?  @db.Text
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SSOConfiguration {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  provider   String // SAML, LDAP, OAuth, AzureAD, Google, Okta
+  isActive   Boolean  @default(false)
+  isRequired Boolean  @default(false)
+  config     String?  @db.Text // JSON
+  metadata   String?  @db.Text
+  createdBy  String?
+  creator    User?    @relation("SSOCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model DatabaseConnection {
+  id         String    @id @default(cuid())
+  name       String
+  type       String // sqlserver, postgresql, mongodb
+  host       String
+  port       Int
+  database   String
+  username   String?
+  password   String?
+  ssl        Boolean   @default(false)
+  encrypt    Boolean   @default(false)
+  authSource String?
+  status     String    @default("unknown")
+  lastTested DateTime?
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Report {
+  id              String   @id @default(cuid())
+  name            String
+  type            String // security, audit, compliance, usage
+  status          String   @default("pending")
+  period          String?
+  size            BigInt?
+  format          String   @default("PDF") // PDF, CSV, Excel
+  description     String?  @db.Text
+  findings        String?  @db.Text
+  recommendations String?  @db.Text
+  data            String?  @db.Text // JSON
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Feedback {
+  id          String   @id @default(cuid())
+  type        String // bug, feature, documentation, support
+  page        String?
+  title       String
+  description String?  @db.Text
+  priority    String   @default("medium")
+  status      String   @default("new") // new, in-progress, resolved, closed
+  rating      Int? // 1-5
+  adminNotes  String?  @db.Text
+  resolvedBy  String?
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  comments FeedbackComment[]
+}
+
+model FeedbackComment {
+  id         String   @id @default(cuid())
+  feedbackId String
+  feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  content    String   @db.Text
+  authorId   String?
+  authorName String?
+  isAdmin    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  icon        String?
+  category    String?
+  website     String?
+  /// Allowlisted probe: sqlserver | postgres | http_basic | http_bearer | http_header
+  probeType   String?
+  /// HTTPS URL for HTTP probes (or unused for DB types)
+  probeUrl    String?
+  /// For http_header: header name (e.g. DD-API-KEY). Unused for other types.
+  probeAuth   String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  passwords PasswordEntry[]
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  color       String? // hex
+  icon        String? // Lucide icon name
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AccessToken {
+  id          String    @id @default(cuid())
+  name        String
+  token       String    @unique
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scopes      String?   @db.Text // JSON
+  /// HUMAN (extension/UI integrations) or AGENT (CLI/MCP/CI) — same ACL, audit label only
+  clientKind  String    @default("HUMAN") @db.VarChar(16)
+  expiresAt   DateTime?
+  lastUsedAt  DateTime?
+  isActive    Boolean   @default(true)
+  ipWhitelist String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// ─── NextAuth Standard Models ──────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model SecurityScan {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  grade       String
+  riskScore   Int
+  totalIssues Int
+  results     String   @db.Text // JSON stringified scan results
+  createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+// ─── Secure Sharing Links ──────────────────────────────────
+
+model SharedLink {
+  id              String        @id @default(cuid())
+  token           String        @unique
+  passwordEntryId String
+  passwordEntry   PasswordEntry @relation(fields: [passwordEntryId], references: [id], onDelete: Cascade)
+  createdBy       String
+  creator         User          @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  expiresAt       DateTime
+  maxViews        Int           @default(1)
+  viewCount       Int           @default(0)
+  isActive        Boolean       @default(true)
+  viewedBy        String? // email or name of viewer
+  viewedAt        DateTime?
+  createdAt       DateTime      @default(now())
+
+  @@index([token])
+  @@index([createdBy])
+}
+
+// ─── Emergency Access ──────────────────────────────────────
+
+model EmergencyAccess {
+  id              String    @id @default(cuid())
+  grantorId       String
+  grantor         User      @relation("EmergencyGrantor", fields: [grantorId], references: [id], onDelete: Restrict)
+  granteeId       String
+  grantee         User      @relation("EmergencyGrantee", fields: [granteeId], references: [id], onDelete: Restrict)
+  status          String    @default("PENDING") // PENDING, APPROVED, REQUESTED, ACTIVE, REVOKED
+  waitingPeriod   Int       @default(48) // hours
+  requestedAt     DateTime?
+  approvedAt      DateTime?
+  accessExpiresAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([grantorId, granteeId])
+  @@index([grantorId])
+  @@index([granteeId])
+}
+
+// ─── Org Workflows (onboarding & custom) ───────────────────
+
+model Workflow {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  name           String
+  slug           String
+  type           String       @default("CUSTOM") // ONBOARDING | CUSTOM
+  description    String?      @db.Text
+  isActive       Boolean      @default(true)
+  /// When true, org users see a persistent banner until completed (cannot dismiss)
+  isRequired     Boolean      @default(true)
+  /// Who must complete: ALL | ADMIN | USER | ASSIGNED
+  audience       String       @default("ALL")
+  sortOrder      Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  steps       WorkflowStep[]
+  progress    WorkflowProgress[]
+  assignments WorkflowAssignment[]
+
+  @@unique([organizationId, slug])
+  @@index([organizationId])
+}
+
+model WorkflowStep {
+  id          String   @id @default(cuid())
+  workflowId  String
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Restrict)
+  title       String
+  description String?  @db.Text
+  sortOrder   Int      @default(0)
+  /// INFO | LINK | ACTION
+  stepType    String   @default("ACTION")
+  /// WELCOME | ENABLE_ENCRYPTION | JOIN_TEAM | CREATE_PASSWORD | OPEN_GENERATOR | REVIEW_HEALTH | CUSTOM
+  actionKey   String?
+  href        String?
+  isRequired  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  completions WorkflowStepCompletion[]
+
+  @@index([workflowId])
+}
+
+model WorkflowProgress {
+  id          String    @id @default(cuid())
+  workflowId  String
+  workflow    Workflow  @relation(fields: [workflowId], references: [id], onDelete: Restrict)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  /// NOT_STARTED | IN_PROGRESS | COMPLETED | DISMISSED
+  status      String    @default("NOT_STARTED")
+  startedAt   DateTime?
+  completedAt DateTime?
+  dismissedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  stepCompletions WorkflowStepCompletion[]
+
+  @@unique([workflowId, userId])
+  @@index([userId])
+}
+
+model WorkflowStepCompletion {
+  id            String           @id @default(cuid())
+  progressId    String
+  progress      WorkflowProgress @relation(fields: [progressId], references: [id], onDelete: Restrict)
+  stepId        String
+  step          WorkflowStep     @relation(fields: [stepId], references: [id], onDelete: Restrict)
+  completedAt   DateTime         @default(now())
+  autoCompleted Boolean          @default(false)
+
+  @@unique([progressId, stepId])
+  @@index([stepId])
+}
+
+model WorkflowAssignment {
+  id           String   @id @default(cuid())
+  workflowId   String
+  workflow     Workflow @relation(fields: [workflowId], references: [id], onDelete: Restrict)
+  userId       String
+  user         User     @relation("WorkflowAssignee", fields: [userId], references: [id], onDelete: Restrict)
+  assignedById String?
+  assignedBy   User?    @relation("WorkflowAssigner", fields: [assignedById], references: [id], onDelete: SetNull)
+  assignedAt   DateTime @default(now())
+
+  @@unique([workflowId, userId])
+  @@index([userId])
+  @@index([workflowId])
+}
+
+/// Early-interest list for managed hosting (lead capture — not a hosted tenant).
+model ManagedWaitlistEntry {
+  id        String   @id @default(cuid())
+  email     String
+  company   String?
+  name      String?
+  notes     String?  @db.Text
+  source    String   @default("marketing")
+  createdAt DateTime @default(now())
+
+  @@unique([email])
+  @@index([createdAt])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  email     String
+  name      String?
+  subject   String?
+  message   String   @db.Text
+  source    String   @default("marketing")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([email])
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String
+  source    String   @default("marketing")
+  createdAt DateTime @default(now())
+
+  @@unique([email])
+  @@index([createdAt])
+}

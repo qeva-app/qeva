@@ -1,0 +1,12 @@
+# Default reviewers — update GitHub usernames/teams for your org.
+# Requires the CODEOWNERS feature and matching write access on the repo.
+
+*       @qeva-app/maintainers
+
+/.github/                 @qeva-app/maintainers
+/docker-compose.yml       @qeva-app/maintainers
+/Dockerfile               @qeva-app/maintainers
+/SECURITY.md              @qeva-app/maintainers
+/src/lib/encryption*.ts   @qeva-app/maintainers
+/src/lib/auth.ts          @qeva-app/maintainers
+/src/lib/edition.ts       @qeva-app/maintainers

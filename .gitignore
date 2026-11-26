@@ -1,0 +1,53 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build
+.next/
+out/
+build/
+dist/
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# env / secrets — never commit real secrets
+.env
+.env.*
+!.env.example
+config/.env
+config/.env.*
+*.pem
+*.key
+certs/
+**/credentials.json
+**/service-account*.json
+
+# logs & runtime
+logs/
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+.cursor/
+.fleet/
+
+# local / internal (not for public tree)
+PENDING.md
+tsc_check_local.js
+.planning/
+*.bak
+*.tmp
+.turbo/
+coverage/
+.nyc_output/
+
+# Docker / local volumes (if ever bind-mounted here)
+postgres-data/
