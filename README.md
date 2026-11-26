@@ -122,4 +122,6 @@ Edition is detected from the Enterprise package when present. Public Community i
 
 ## License
 
-License file to be added with the public release. This tree is the **Community** open-core product; Enterprise implementations live in a private repo and are not shipped here.
+[MIT](LICENSE) © 2026 Gaurav Gupta
+
+This tree is the **Community** open-core product. Enterprise implementations live in a private repo and are not shipped here.

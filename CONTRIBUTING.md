@@ -65,4 +65,4 @@ npm run selfcheck
 
 ## License
 
-Contributions are accepted under the repository license (to be added with the public release). By opening a PR you agree your contribution may be distributed under that license.
+Contributions are accepted under the [MIT License](LICENSE). By opening a PR you agree your contribution may be distributed under that license.
