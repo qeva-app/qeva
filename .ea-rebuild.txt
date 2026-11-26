@@ -1,3 +1,0 @@
---- pid: 42596 cwd: "e:\\GITHUB\\qeva" command: "Remove-Item Env:DATABASE_URL -ErrorAction SilentlyContinue; $env:DOCKER_BUILDKIT='1'; $env:BUILDKIT_PROGRESS='plain'; docker compose --profile bundled up -d --build" title: "Rebuild and restart with emergency-access fix" status: succeeded started_at: 2026-11-26T19:18:06.932Z running_for_ms: 170242   
----
- Container qeva-app Recreate   Container qeva-app Recreated   Container qeva-db Waiting   Container qeva-db Healthy   Container qeva-app Starting   Container qeva-app Started   --- exit_code: 0 elapsed_ms: 170242 ended_at: 2026-11-26T19:20:57.173Z ---
